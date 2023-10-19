@@ -1,0 +1,45 @@
+\usepackage{xcolor}
+
+% use a new page for each header level 1
+\usepackage{titlesec}
+\newcommand{\sectionbreak}{\clearpage}
+
+% change background color for inline code in
+\definecolor{bgcolor}{HTML}{E0E0E0}
+\let\oldtexttt\texttt
+\renewcommand{\texttt}[1]{
+  \colorbox{bgcolor}{\oldtexttt{#1}}
+}
+
+% \setmainfont [ Path = fonts/
+%     , UprightFont = *-Regular
+%     , BoldFont = *-Bold
+%     , ItalicFont = *-Italic
+%     , BoldItalicFont = *-BoldItalic
+% ] {TitilliumWeb}
+
+% style blockquotes
+% change style of quote, see also https://tex.stackexchange.com/a/436253/114857
+\usepackage[most]{tcolorbox}
+
+\definecolor{linequote}{RGB}{224,215,188}
+\definecolor{backquote}{RGB}{249,245,233}
+\definecolor{bordercolor}{RGB}{221,221,221}
+
+\newtcolorbox{myquote}[1][]{%
+    enhanced,
+    breakable,
+    size=minimal,
+    left=10pt,
+    top=5pt,
+    frame hidden,
+    boxrule=0pt,
+    sharp corners=all,
+    colback=backquote,
+    borderline west={2pt}{0pt}{bordercolor},
+    #1
+}
+
+% redefine quote environment to use the myquote environment, see https://tex.stackexchange.com/a/337587/114857
+\renewenvironment{quote}{\begin{myquote}}{\end{myquote}}
+

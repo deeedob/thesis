@@ -1,0 +1,21 @@
+pdf-engine: xelatex
+from: markdown+fancy_lists+implicit_figures+emoji
+to: pdf
+
+filters:
+  - mermaid-filter
+
+input-files:
+  - content/00_header.md
+  - content/10_introduction.md
+  - content/99_bibliography.md
+
+toc: true
+embed-resources: true
+
+highlight-style: tango
+
+cite-method: citeproc
+csl: https://www.zotero.org/styles/hochschule-bonn-rhein-sieg
+
+output-file: thesis.pdf
