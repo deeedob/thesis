@@ -36,13 +36,13 @@ A short query of:
 reveals 57.800 entries found. From which 580 are in the timeframe of the past
 year between 10/19/2022 - 10/19/2023. Although the meaningfullness of such
 numbers is questionable, it still shows the relevance and need of seeing Qt as an
-option for developing audio plugins is there.
+option for developing audio plugins.
 
 ## 1.1 Background
 
 ###  1.1.1 Plugins: Overview and Significance
 
-**Plug**-**ins** in their most basic form extend the functionality of a
+**Plug**-***ins*** in their most basic form extend the functionality of a
 plugin-loading-host dynamically. We could think of them as functionality that
 is made available *on-demand*. They are used all around the software and
 hardware world and can be found in a multitude of areas. Be it the extension of
@@ -50,7 +50,7 @@ specialized filters for image processing applications like *Adobe Photoshop*,
 dynamically loadable drivers for operating systems like *GNU/Linux*
 [@cppn2074] or operating system dependent features as used in .
 
-![basic plugin](images/plugin-basic.png)
+![basic plugin architecture](images/plugin-basic.png)
 
 - Define what plugins are and their role in software systems.
 - Explain how plugins enhance the functionality and extensibility of software applications.

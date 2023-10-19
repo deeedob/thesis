@@ -5,5 +5,5 @@ help:
 	head -2 Makefile
 
 thesis-pdf:
-	pandoc -F pandoc-crossref --citeproc --defaults=defaults.yaml --include-in-header=includes/thesis.tex
+	pandoc -F pandoc-crossref --citeproc --defaults=defaults.yaml --include-in-header=thesis.tex
 

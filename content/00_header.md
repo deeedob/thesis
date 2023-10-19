@@ -17,7 +17,7 @@ abstract: |
 
 papersize: a4
 
-fontsize: 12
+fontsize: 14
 # mainfont: TitilliumWeb
 monofont: "MonoLisa"
 bibliography: content/bibliography.bib
