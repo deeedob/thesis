@@ -4,6 +4,7 @@ to: pdf
 
 filters:
   - mermaid-filter
+  - pandoc-include
 
 input-files:
   - content/00_header.md

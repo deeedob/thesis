@@ -40,6 +40,99 @@ option for developing audio plugins.
 
 ## 1.1 Background
 
+### 1.1.1 Plugins: Shared Libraries
+
+When we talk about plugins written in a compiled language, we most often refer
+to them as shared libraries. A shared library (also known as dynamic library or
+DSO^[Dynamic Shared Object]) are reusable objects that export a table of
+symbols (functions, variables, global data etc.). These libraries are then
+loaded into shared memory once, and made available to all the instances that
+potentially use them. This technique allows for efficient memory and resources
+management. Frequently used libraries can benefit from that. On the other hand it
+affects portabillity since those libraries need to be present on the target
+platform or have to be shipped together with the application.
+
+A cannonical example would be the *standard C library* (libc), which we can
+find in almost every application, hence the effectiveness of using shared
+libraries can be fully explored.
+
+Here are some examples where we explore some common applications with the tool
+**ldd**, which is a standard linux utillity to print shared object dependencies:
+
+```bash
+ldd /usr/bin/git
+  linux-vdso.so.1 (0x00007ffcf7b98000)
+  libpcre2-8.so.0 => /usr/lib/libpcre2-8.so.0 (0x00007f5c0f286000)
+  libz.so.1 => /usr/lib/libz.so.1 (0x00007f5c0f26c000)
+  libc.so.6 => /usr/lib/libc.so.6 (0x00007f5c0ec1e000)
+
+ldd /usr/bin/gcc
+  linux-vdso.so.1 (0x00007ffef8dfd000)
+  libc.so.6 => /usr/lib/libc.so.6 (0x00007fcf68af9000)
+```
+
+Shared libraries can be further categorized into:
+
+- *Dynamically linked libraries* - The library is linked against the
+application after the compilation. The kernel then loads the library, if not
+already in shared memory, automatically upon execution.
+- *Dynamically loaded libraries* - The application takes full control by loading
+libraries manually with tools like [dlopen](https://linux.die.net/man/3/dlopen) or
+[QLibrary](https://doc.qt.io/qt-6/qlibrary.html).
+
+In the case of audio plugins, the latter technique will be used to load plugin
+instances. The interface, that a plugin standard defines can hence be seen as a
+communication layer, more in the sence of a *request - response* mechanism then
+the traditional utillity functionality of linked libraries.
+
+Since shared libraries are at the foundation of every plugin, it comes beneficial
+to explore them a bit deeper by going through a minimal example:
+
+```cpp
+!include examples/simplelib.cpp
+```
+
+This code defines a minimal shared library. After including the required
+standard-headers, we define a compile time directive that is used to signal the
+visibillity of the exported symbols. Windows and Unix based system differ here.
+On Windows with MSVC the symbols are _not_ exported by default, and require
+explicit marking with `__declspec(dllexport)`. On Unix based system we use the
+visibillity attribute. Since by default all symbols are exported on these
+platform this attribute could be seen as superfluous, it is still nice to be
+explicit here. This would also allows us to control the visibillity in the
+linking step by simply using the linker flag `-fvisibility=hidden`
+to hide all symbols.
+
+The function `void lib_hello()` is additionally marked with `extern "C"` to provide
+C linkage, which makes this function also available to clients loading this library
+from C-code. The function then simply prints the name and the source location of the
+current file.
+
+Now lets have a look at the host, which is loading the shared library during its runtime.
+The implementation is Unix specific but would follow similar logic on Windows as well:
+
+```cpp
+!include examples/simplehost.cpp
+```
+
+For simplicity reasons the error handling has been kept to a minimum. The code
+seen above is basically all it takes to *dynamically load libraries*, and is
+what plugin-hosts are doing to interact with the plugin interface.
+
+To finalize this example, lets write a minimal build script and run
+our `sharedlibhost` executable.
+
+```bash
+!include examples/build_and_run.sh
+```
+
+And finally run our script:
+
+```bash
+./build_and_run
+sharedlib: called from sharedlib.cpp:18
+```
+
 ###  1.1.1 Plugins: Overview and Significance
 
 **Plug**-***ins*** in their most basic form extend the functionality of a
@@ -48,9 +141,11 @@ is made available *on-demand*. They are used all around the software and
 hardware world and can be found in a multitude of areas. Be it the extension of
 specialized filters for image processing applications like *Adobe Photoshop*,
 dynamically loadable drivers for operating systems like *GNU/Linux*
-[@cppn2074] or operating system dependent features as used in .
+[@cppn2074] or operating system dependent features as used in the Qt framework.
 
 ![basic plugin architecture](images/plugin-basic.png)
+
+*Figure 1* describes this process. After successfully loading
 
 - Define what plugins are and their role in software systems.
 - Explain how plugins enhance the functionality and extensibility of software applications.
@@ -150,7 +245,5 @@ dynamically loadable drivers for operating systems like *GNU/Linux*
 
 - Highlight the contributions of the thesis to the field of audio processing and software development.
 - Identify potential areas for future research and improvement in the integration process.
-
-
 
 
