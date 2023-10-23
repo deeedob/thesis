@@ -354,9 +354,10 @@ announced on the *Unreal Fest 2022*[@ueaudio].
 One of the major issues in the integration of Qt user interfaces with these
 restricted audio plugin environments lays in reentrancy. A program or a
 function is re-entrant if multiple invocations can safely run concurrently, in
-other words they can be "re-entered". This behavior is crucial since multiple
-instances of a plugin are usually created from within those loaded shared
-libraries. Lets have a look on a simple example which shows this problem:
+other words they can be "re-entered" from within the same process. This
+behavior is crucial since multiple instances of a plugin are usually created
+from within those loaded shared libraries. Lets have a look at a simple example
+which highlights this problem:
 
 ```cpp
 !include examples/reentrancy.cpp
@@ -407,10 +408,10 @@ static QCoreApplication *instance() noexcept { return self; }
 ```
 
 This mean there can only ever exist one QApplication per process. If the
-plugin-loading-host now uses a QApplication, as the DAW [QTractor
+plugin-loading-host now uses a QApplication object, as the DAW [QTractor
 does](https://github.com/rncbc/qtractor/blob/0e987e6c41796a4cbe85e499ae890b5989be8b82/src/qtractor.h#L60),
-or we load multiple instances of the plugin from withing one process this won't
-work anymore.
+or we load multiple instances of the plugin from within the same process this
+won't work anymore.
 
 Another point is the blocking aspect of Qt's event loop. The event loop
 `Q*Application::exec()` only returns after finishing its execution. But all
@@ -418,101 +419,28 @@ functions used in the mentioned plugin standards require to return from it.
 
 Now there are many ways to hack your way around those problems, as to compile
 Qt in a seperate namespace and to start the event loop in a dedicated thread.
-But none of those 'techniques' really prooved successfull to work on all platforms
-and provide a stable solution. Either the development experience would be very complex
-and time consuming (compiling Qt in a seperate namespace), and
-
-- Clearly state the research problem and the challenges associated with the integration process.
-
-- No exec, because of problems with multuple instances
-- Explain Windows, Linux and Mac behavior, Glib static presence
-- QApplication, static environment, can
-- Shared Library - non blocking
+But none of those 'techniques' really prooved successfull to work on all
+platforms and provide a stable solution. Either the development experience
+would be very complex and time consuming (compiling Qt in a seperate
+namespace), or it just results in an unstable and unsupported state (starting
+the event loop in a seperate thread).
 
 ## 1.3 Objectives
 
-- Outline the main objectives of the thesis, focusing on the integration of Qt and Clap.
+The goal for this work is to research new methods that would allow for the creation
+of graphical user interfaces with the Qt framework in combination with a
+plugin standard. It should be possible to start the GUI from within a host
+and have a working communication in both sides (host <-> GUI). The development
+of Qt GUIs should feel native, that is, events coming from the host should be
+integrated into Qts event system and should provide signal & slots for usage
+in the UI components.
+
 
 ## 1.4 Scope and Limitations
 
-- Define the boundaries and extent of the research.
-- Cross platform: Linux (wayland + xorg), windows and mac
-- Identify any limitations or constraints that may affect the integration process.
-
-# Chapter 2: The Qt Framework
-
-- Provide a comprehensive introduction to the Qt framework, its history, and its key features.
-- Discuss the advantages of using Qt for software development.
-
-## 2.2 Qt Modules and Architecture, QtGRPC
-
-- Explore the various modules and components of the Qt framework.
-- Explain the architecture and design principles of Qt.
-
-## 2.3 Qt APIs and Tools
-
-- Discuss the different APIs and tools provided by Qt for application development.
-- Highlight relevant APIs that will be utilized in the integration process.
-
-# Chapter 3: The Clap Audio Plugin Format
-
-## 3.1 Introduction to Clap
-
-- Explain the purpose and significance of the Clap audio plugin format.
-- Discuss its role in the audio processing industry.
-
-## 3.2 Clap Plugin Structure
-
-- Describe the structure and organization of Clap audio plugins.
-- Explain the required components and their functionalities.
-- Events, Realtime
-
-## 3.3 Clap API and Specifications
-
-- Explore the Clap API and its usage in developing audio plugins.
-- Discuss the specifications and guidelines for creating Clap-compatible plugins.
-
-# Chapter 3.5: Realtime, Events, Data Structures, Communications
-
-# Chapter 4: Integrating Qt with Clap
-
-## 4.1 Design Considerations
-
-- Discuss the design principles and considerations for integrating Qt with Clap.
-- Address any challenges or conflicts that may arise during the integration process.
-
-## 4.2 Architecture and Implementation
-
-- Propose an integration architecture that leverages the strengths of both Qt and Clap.
-- Detail the implementation steps and techniques involved in the integration.
-
-# Chapter 5: Experimental Results and Evaluation
-
-## 5.1 Test Setup and Methodology
-
-- Explain the experimental setup used for evaluating the integrated solution.
-- Describe the methodology employed to measure the performance and effectiveness.
-
-## 5.2 Results and Analysis
-
-- Mention all problems: GLib event loop / no auto attach on linux
-- Present the empirical results obtained from the experiments.
-- Analyze and interpret the results in relation to the integration objectives.
-
-# Chapter 6: Discussion and Conclusion
-
-## 6.1 Summary of Findings
-
-- Summarize the key findings and outcomes of the research.
-
-## 6.2 Discussion of Results
-
-- Discuss the implications and significance of the results obtained.
-- Compare the integrated solution with existing approaches and discuss its advantages.
-
-## 6.3 Contributions and Future Work
-
-- Highlight the contributions of the thesis to the field of audio processing and software development.
-- Identify potential areas for future research and improvement in the integration process.
-
+This work will use the **CLAP** plugin standard, as it's the newest and most
+promising standard. The Scope of this work is to find a way to integrate those
+two environments (audio plugins and Qt GUIs) but not providing a cross platform
+solution. The targeted platform will be Linux and both protocols, X11 and Wayland
+should be supported with this work.
 
