@@ -17,6 +17,16 @@
     BoldItalicFont = TitilliumWeb-BoldItalic.ttf
 ] {TitilliumWeb-Regular.ttf}
 
+% Improve text and figure positioning to stay in sync.
+\usepackage{float}% http://ctan.org/pkg/float
+\let\origfigure\figure
+\let\endorigfigure\endfigure
+\renewenvironment{figure}[1][2] {
+    \expandafter\origfigure\expandafter[H]
+} {
+    \endorigfigure
+}
+
 % style blockquotes
 % change style of quote, see also https://tex.stackexchange.com/a/436253/114857
 \usepackage[most]{tcolorbox}

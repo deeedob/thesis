@@ -6,7 +6,7 @@
 int main()
 {
     // Load the shared library.
-    void* handle = dlopen("libsimplelib.so", RTLD_LAZY);
+    void* handle = dlopen("./libsimplelib.so", RTLD_LAZY);
     if (!handle)
         return EXIT_FAILURE;
     // Resolve the exported symbol.

@@ -13,7 +13,17 @@ abstract: |
   companies. If we look into the expanding world of audio-plugins however,
   we would steer into the void when looking for Qt user-interfaces. With this
   work I will explain the reasons and problems that led to this state and show
-  a new and innovative approach in solving the problems.
+  a new and innovative approach in solving the problems. A user should be able
+  to find plugins that fits perfectly their needs to customize their environment.
+  However developers often don't have that freedom when it comes to developing
+  such plugins. The goal is to bridge the gap and extend the toolset developers
+  have in developing audio plugins and their graphical user interface specifically.
+
+  Special thanks to:
+
+  - Dr. Cristián Maureira-Fredes (Qt) for making all of this possible and his ...
+  - Alexandre Bique (Bitwig & CLAP) for listening to my idea and providing
+    deep insights into CLAP and extended techniques for communication
 
 papersize: a4
 

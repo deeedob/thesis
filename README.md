@@ -4,15 +4,11 @@
 
 author: Dennis Oberst
 
-## Getting started
+The most up-to-date version can be viewed at **thesis.pdf**.
 
-First, clone the repository:
+## Building
 
-```bash
-    git clone https://github.com/deeedob/thesis --depth 1
-```
-
-Then create a virtual environment to install the needed filter:
+Create a virtual environment to install the needed filter:
 ```bash
     python -m venv venv
     source venv/bin/activate.<your shell>

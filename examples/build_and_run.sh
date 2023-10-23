@@ -10,4 +10,7 @@ g++ -shared -o build/libsimplelib.so simplelib.cpp -fPIC -std=c++20 -Wall -Wextr
 # dynamic loader on Unix systems.
 g++ -o build/simplehost simplehost.cpp -ldl -Wall -Wextra -pedantic
 
-./build/simplehost
+# Run the host program. We change to the build directory, because
+# the host expects the shared library to be in the same directory.
+cd build/ || exit
+./simplehost
