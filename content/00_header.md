@@ -7,23 +7,17 @@ date: 19 October 2023
 lang: en-US
 
 abstract: |
-  The Qt project is a powerful and versatile C++ framework widely used
-  for developing cross-platform applications. Additionally, Qt is no stranger
-  to the audio-industry, with a strong presence within professional audio
-  companies. If we look into the expanding world of audio-plugins however,
-  we would steer into the void when looking for Qt user-interfaces. With this
-  work I will explain the reasons and problems that led to this state and show
-  a new and innovative approach in solving the problems. A user should be able
-  to find plugins that fits perfectly their needs to customize their environment.
-  However developers often don't have that freedom when it comes to developing
-  such plugins. The goal is to bridge the gap and extend the toolset developers
-  have in developing audio plugins and their graphical user interface specifically.
-
-  Special thanks to:
-
-  - Dr. Cristián Maureira-Fredes (Qt) for making all of this possible and his ...
-  - Alexandre Bique (Bitwig & CLAP) for listening to my idea and providing
-    deep insights into CLAP and extended techniques for communication
+  The Qt project is a robust C++ framework, prominently recognized for enabling
+  the development of cross-platform applications. Within the realm of the audio
+  industry, Qt maintains a significant presence amongst professional entities.
+  However, when examining the domain of audio-plugins, there's a notable
+  absence of Qt-based user interfaces. This document elucidates the reasons and
+  challenges contributing to this absence. Furthermore, it introduces a
+  structured approach to address these challenges. While users often navigate
+  the market in search of plugins that cater to their requirements, developers
+  face constraints in crafting such plugins. The objective of this research is
+  to bridge this disparity, enhancing the resources available to developers,
+  especially in the creation of graphical user interfaces for audio plugins.
 
 papersize: a4
 

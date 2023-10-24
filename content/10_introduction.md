@@ -1,64 +1,61 @@
 # Chapter 1: Introduction
 
-Throughout this work we will talk about plugins and how they affect the
-usabillity of an application. We will specifically explore the development of
-graphical user interfaces for audio plugins. We will inspect how it affects
-user experiences and explore their correlations with development experiences.
-When thinking about GUIs^[Graphical User Interfaces] in general it comes
-natural to spend some thoughts about their flexibillity and stability. There
-are more operating systems, graphic-backends, and platform specific details out
-there, than a single developer could ever handle to implement.
+Throughout this work, we will discuss plugins and their impact on the usability
+of an application. Specifically, we will delve into the development of
+graphical user interfaces (GUIs) for audio plugins, examining their influence
+on user experiences and their relationship with development experiences. When
+considering GUIs^[Graphical User Interfaces] broadly, it's natural to
+contemplate their flexibility and stability. The sheer number of operating
+systems, graphic backends, and platform-specific details is more than any
+single developer could realistically address.
 
-When we spent time learning and potentially mastering a skill, we often want it
-to be applicable to a variety of use-cases. Choosing a library that *has stood
-the test of time* would complement the stability, but we often don't want to
-re-learn a topic just because the API^[Application Programming Interface] of
-our skill set has changed.
+Investing time in learning and potentially mastering a skill naturally leads to
+the desire to apply it across various use-cases. Opting for a library that has
+*withstood the test of time* enhances stability, yet professionals often seek
+continuity, preferring not to re-acquaint themselves with a topic merely because
+API^[Application Programming Interface] of our chosen toolkit doesn't support
+the targeted platform.
 
-Thus, it comes natural to think about Qt, a cross-platform framework for
-creating graphical user interfaces (GUIs) when considering the implementation
-of an audio plugin UI^[User Interface], that should be available on all the
-major platforms. The skill set we acquire in using the Qt framework is
-versatile and can be used to develop mobile, desktop or even embedded
-applications without the need to re-learn syntax or logic. One of the slogans
-of Qt applies here:
+Therefore, Qt, a cross-platform framework for crafting GUIs, comes to mind when
+contemplating the development of an audio plugin UI^[User Interface] intended
+for widespread platform compatibility. The expertise gained from utilizing the
+Qt framework is versatile, suitable for crafting mobile, desktop, or even
+embedded applications without relearning syntax or structure. As one of Qt's
+mottos aptly states:
 
 > Code once, deploy everywhere.
 
-We can see the demand on this topic by simply searching for references on the
-forum "kvraudio.com", which is a well-known website to discuss audio related
-topics.
+The significance of this subject becomes evident when browsing the forum
+"kvraudio.com", a renowned platform for audio-related discussions.
 
-A short query of:
+A brief search of:
 
 > "Qt" "Plugin" :site www.kvraudio.com
 
-reveals 57.800 entries found. From which 580 are in the timeframe of the past
-year between 10/19/2022 - 10/19/2023. Although the meaningfullness of such
-numbers is questionable, it still shows the relevance and need of seeing Qt as
-an option for developing audio plugins.
+uncovers 57'800 results, with 580 from the span between 10/19/2022 and
+10/19/2023. While the weight of such figures may be debated, they undeniably
+highlight the relevance and potential of Qt as a viable choice for audio plugin
+development.
 
 ## 1.1 Background
 
 ### 1.1.1 Plugins: Shared Libraries
 
-When we talk about plugins written in a compiled language, we most often refer
-to them as shared libraries. A shared library (also known as dynamic library or
-DSO^[Dynamic Shared Object]) are reusable objects that export a table of
-symbols (functions, variables, global data etc.). These libraries are then
-loaded into shared memory once, and made available to all the instances that
-potentially use them. This technique allows for efficient memory and resources
-management. Frequently used libraries can benefit from that. On the other hand
-it affects portabillity since those libraries need to be present on the target
-platform or have to be shipped together with the application.
+When discussing plugins written in a compiled language, we typically refer to
+them as shared libraries. A shared library, also known as a dynamic library or
+DSO^[Dynamic Shared Object], is a reusable object that exports a table of
+symbols (e.g., functions, variables, global data). These libraries are loaded
+into shared memory once and made accessible to all instances that might utilize
+them. This approach ensures efficient memory and resource management. Commonly
+used libraries can greatly benefit from this. However, this efficiency can
+compromise portability, as these libraries must either be present on the target
+platform or packaged with the application.
 
-A cannonical example would be the *standard C library* (libc), which we can
-find in almost every application, hence the effectiveness of using shared
-libraries can be fully explored.
+A canonical example is the *standard C library* (libc). Given its presence in
+nearly every application, the efficiency of shared libraries becomes evident.
 
-Here are some examples where we explore some common applications with the tool
-**ldd**, which is a standard linux utillity to print shared object
-dependencies:
+To demonstrate, we'll examine the shared object dependencies of some standard
+applications using the Linux utility **ldd**:
 
 ```bash
 ldd /usr/bin/git
@@ -82,13 +79,14 @@ Shared libraries can be further categorized into:
   [dlopen](https://linux.die.net/man/3/dlopen) or
   [QLibrary](https://doc.qt.io/qt-6/qlibrary.html).
 
-In the case of audio plugins, the latter technique will be used to load plugin
-instances. The interface, that a plugin standard defines can hence be seen as a
-communication layer, more in the sence of a *request - response* mechanism then
-the traditional utillity functionality of linked libraries.
+For audio plugins, the latter method is employed to load plugin instances. The
+interface defined by a plugin standard can be viewed more as a communication
+layer, resonating more with a request-response paradigm than the conventional
+utility functions of linked libraries.
 
-Since shared libraries are at the foundation of every plugin, it comes
-beneficial to explore them a bit deeper by going through a minimal example:
+Considering the foundational role of shared libraries in every plugin, it's
+beneficial to delve deeper into their intricacies. Let's explore a basic
+example:
 
 ```cpp
 !include examples/simplelib.cpp
@@ -100,10 +98,10 @@ visibillity of the exported symbols. Windows and Unix based system differ here.
 On Windows with MSVC the symbols are _not_ exported by default, and require
 explicit marking with `__declspec(dllexport)`. On Unix based system we use the
 visibillity attribute. Since by default all symbols are exported on these
-platform this attribute could be seen as superfluous, it is still nice to be
-explicit here. This would also allows us to control the visibillity in the
-linking step by simply using the linker flag `-fvisibility=hidden` to hide all
-symbols.
+platforms, rendering this attribute seemingly redundant, it remains
+advantageous to maintain clarity. This would also allows us to control the
+visibillity in the linking step by simply using the linker flag
+`-fvisibility=hidden` to hide all symbols.
 
 The function `void lib_hello()` is additionally marked with `extern "C"` to
 provide C linkage, which makes this function also available to clients loading
@@ -138,31 +136,34 @@ simplelib: called from simplelib.cpp:18
 
 ###  1.1.2 Plugins: Overview
 
-**Plug**-***ins*** in their most basic form extend the functionality of a
-plugin-loading-host dynamically. We could think of them as functionality that
-is made available *on-demand*. They are used all around the software and
-hardware world and can be found in a multitude of areas. Be it the extension of
-specialized filters for image processing applications like *Adobe Photoshop*,
-dynamically loadable drivers for operating systems like *GNU/Linux* [@cppn2074]
-or operating system dependent features as used in the Qt framework.
+**Plug**-***ins***, at their essence, serve as dynamic extensions, enhancing
+the capabilities of a plugin-loading host. One can perceive them as *on-demand*
+functionalities ready for deployment. Their prevalence is evident across both
+the software and hardware domains. For instance, they can be specialized
+filters added to image processing applications like *Adobe Photoshop*, dynamic
+driver modules integrated into operating systems such as *GNU/Linux*
+[@cppn2074], or system-specific extensions found in frameworks like *Qt*.
 
 ![basic plugin architecture](images/plugin-basic.png)
 
-*Figure 1* describes this process. On the left side is the host that has
-implemented the hosting functionality of the plugin interface. In the middle is
-the plugin interface that serves as a means of communication between the two
-instances and to the right is the plugin implementation. After successfully
-loading a shared object, the host then *requests* the required functionality
-from the plugin on demand. It calls specific functions and acts upon the
-results it gets. The plugin often also has access to request some functionality
-from the host, although most often the plugin just reacts to requests from the
-host. The communication follows the requirements of the well defined plugin
-interface that sits in-between those two instances.
+*Figure 1* offers a visual representation of this mechanism. On the left, we
+have the host, which is equipped with the capability to accommodate the plugin
+interface. Centrally located is the plugin interface itself, serving as the
+communication bridge between the host and the plugin. The right side showcases
+the actual implementation of the plugin. Once the shared object is loaded
+successfully by the host, it actively *requests* the necessary functionalities
+from the plugin as and when required. This interaction entails invoking
+specific functions and subsequently taking actions based on the results. While
+plugins can, on occasion, prompt functions from the host, their primary role is
+to respond to the host's requests. The foundation of this interaction is the
+meticulously designed plugin interface that facilitates this bilateral
+communication.
 
-An example interface can be seen in the **CL**ever **A**udio **P**lugin format,
-which defines a standard for communication between a **D**igital **A**udio
-**W**orkstation and plugins (synthesizers, audio effects, ...) to work
-together. Here is a function of the C-API:
+A concrete example of such an interface can be gleaned from the **CL**ever
+**A**udio **P**lugin (CLAP) format. This standard dictates the communication
+protocols between a **D**igital **A**udio **W**orkstation (DAW) and its various
+plugins, be it synthesizers, audio effects, or other elements. A segment from
+the C-API reads:
 
 ```cpp
    // Call start processing before processing.
@@ -170,10 +171,10 @@ together. Here is a function of the C-API:
    bool(CLAP_ABI *start_processing)(const struct clap_plugin *plugin);
 ```
 
-Lets deconstruct this function to get a deeper understanding. We define the
-calling convention for a function pointer `start_processing`, which returns a
-`bool` and accepts a const pointer to the struct `clap_plugin`. Additionally
-there is the preprocessor macro CLAP_ABI, which has following definition:
+To unpack this, the function outlines the calling convention for a function
+pointer named `start_processing`. This pointer returns a `bool` and receives a
+constant pointer to the struct `clap_plugin` as an argument. Embedded within this
+is the preprocessor macro CLAP_ABI, defined as:
 
 ```cpp
 #if !defined(CLAP_ABI)
@@ -185,100 +186,98 @@ there is the preprocessor macro CLAP_ABI, which has following definition:
 #endif
 ```
 
-So on Windows like platform we use the attribute `__cdecl`, which enforces
-function calling convention to C-style. On all other platforms this macro is
-empty and does nothing. This is an implementation detail and not important to
-know unless you want to build your own plugin interface.
+For Windows and similar platforms, the attribute `__cdecl` is adopted, ensuring
+adherence to the C-style function calling convention. On other platforms, this
+macro is unassigned. This implementation detail only becomes pertinent for developers
+intent on designing theor own plugin interface.
 
-Over the time we will encounter the terms *ABI* and *API* quite regularly, so
-let us resolve those. API, or **A**pplication **P**rogramming **I**nterface is
-a set of rules and protocols that allow different software components to
-communicate with each other. It serves as a contract between the software
-components, allowing developers to create applications that interact with these
-components. It can be thought of as the *front-end* to the ABI, the
-**A**pplication **B**inary **I**nterface, which is the actual binary that is
-being executed by the callee. Since software evolves sequentially, that is,
-version 1.1 is followed by version 1.2, is followed by version 1.3 and so on,
-providing a stable interface is crucial for the development and growth of the
-interface. We often want one instance, that uses version 1.3 of the interface
-to be compatible with version 1.1, without the need of recompilation or extra
-burdens for the clients, who already implemented existing API. This is called
-***Binary Compatibillity***, it defines that a new version of a library is
-compatible with an older version without causing issues for applications that
-depend on it. Since binary compatibillity is, as the name suggest, on the
-binary level, this doesn't necessarily mean that the public API, where clients
-interact with can't be changed. It simply means that the binary parts of the
-existing API _have_ to be present in the compiled binary. If we additionally
-want the API to be stable we speak of ***Source Compatibillity***. Achieving
-this requires careful design decisions and involves maintaining a consistent
-API without breaking changes, such as renaming functions or altering their
-behavior.
+Throughout our discussions, we'll frequently reference the terms *ABI* and
+*API*. To ensure clarity, let's demystify these terms. The **API**, an acronym
+for **A**pplication **P**rogramming **I**nterface, serves as a blueprint that
+dictates how different software components should interact. Essentially, it
+acts as an agreement, ensuring that software pieces work harmoniously together.
+If we think of software as a puzzle, the API helps ensure that the pieces fit
+together.
+
+On the flip side, we have the **ABI** or **A**pplication **B**inary
+**I**nterface, which pertains to the actual executable binary. While the API
+sets the communication norms, the ABI ensures they're executed accurately.
+
+As software undergoes iterative development—evolving from version 1.1 to 1.2,
+and then to 1.3, and so forth—maintaining a consistent interface becomes
+paramount. Ideally, software designed using version 1.3 of an interface should
+seamlessly operate with version 1.1. This seamless integration without
+necessitating recompilation or additional adjustments is known as ***Binary
+Compatibility***. It ensures that different versions of software libraries can
+coexist without conflict. Notably, while binary compatibility emphasizes the
+consistent presence of binary components, it doesn't imply rigidity in the API.
+
+Beyond this, there's the concept of ***Source Compatibility***. This pertains
+to preserving the integrity of the API. Achieving this form of compatibility
+demands meticulous planning and entails upholding a uniform API, precluding
+drastic alterations like function renaming or behavioral modifications.
 
 ###  1.1.3 Audio Plugins: Structure and Realtime
 
-If we talk about audio plugins specifically and look at their structure, we
-will see that their interface consists of two seperated parts. A realtime audio
-sections and a controlling section.
+In exploring the realm of audio plugins, two primary components emerge in their
+structure: a realtime audio section and a controlling section.
 
 ![basic audio plugin architecture](images/audio-plugin-basic.png)
 
-*Figure 2* has a similar structure to the one seen in *Figure 1*, however the
-plugin interface is now seperated into two colors. The green color means that
-the host will interact with the API from a low priority main thread. It is used
-to control the plugin behavior as to initiate the creation of a GUI or to
-request other controlling behavior. Low priority here means that it is safe to
-perform operations that are non-deterministic and can potentially block any
-further progress for an unknown amount of time.
+*Figure 2* illustrates a structure closely resembling *Figure 1*. The plugin
+interface now features two distinct colors to aid differentiation. The green
+section pertains to the host's interaction with the plugin through a
+low-priority main thread. This primarily handles tasks such as GUI setup and
+other control-related functions. "Low priority" implies that it's permissible
+to conduct non-deterministic operations which may momentarily halt progress.
 
-The red color here means that the API is beeing called from a high priority
-realtime thread. Those functions are frequently called and require a low
-latency to quickly respond to the host. They process all incoming events from
-the host, as the change of parameters and various other important events that
-are required to further process the audio. When processing the audio, the
-plugin will take all changes that it requires and perform the operation it
-promises. One example would be a gain plugin. A gain typically changes the
-output volume and has one parameter: the gain in decibels that we want to
-increase or reduce the output audio.
+The red segment signifies that the API is being invoked by a high-priority
+realtime thread. These functions are called frequently and demand minimal
+latency to promptly respond to the host. They process all incoming events from
+the host, including parameter changes and other vital events essential for
+audio processing. When processing audio, the plugin integrates all necessary
+alterations and executes the specified function, as demonstrated by a gain
+plugin; A typical gain modifies the output volume and possesses a single
+parameter: the desired gain in decibels to amplify or diminish the output
+audio.
 
-![realtime overview](images/realtime-overview.png)
+![realtime overview[@lowlatency]](images/realtime-overview.png){ width=77% }
 
-What makes audio programming so difficult at some point is the frequency in
-what we have to respond to the audio callback. The general structure is as
-followed:
+A challenge in audio programming stems from the rapidity with which the audio
+callback needs a response. The standard structure unfolds as:
 
-1. The host frequently calls a process function and passes the audio input
-   buffer as an argument, as well as all the events that occurred relative to
-   the audio samples (as e.g. a user rotating a dial inside the host).
-2. The plugin then has to perform its functionality on this buffer as fast as
-   possible and return the updated audio buffer to the host. Since we most
-   often include a GUI we also have to synchronize all processing with the
-   events from the audio engine. After finishing our processing of all audio
-   samples and events we push those changes to our GUI again.
+1. The host routinely invokes a process function, forwarding the audio input
+   buffer as an argument, along with any events related to the audio samples
+   (such as a user adjusting a dial within the host).
+2. The plugin must swiftly act on this buffer and relay the modified audio
+   buffer back to the host. Given that a GUI is often integrated,
+   synchronization with the audio engine's events is vital. Once all audio
+   samples and events are processed, these changes are communicated back to the
+   GUI.
 
-If we miss a deadline of the callback however, because our previous processing
-took too long, this can result in audio drop outs and glitches. This is an
-unacceptable behavior for professional audio and should be avoided at any cost.
-So the saying is:
+Failure to meet the callback's deadline, perhaps due to extended previous
+processing, can lead to audio disruptions and glitches. Such inconsistencies
+are detrimental to professional audio and must be diligently avoided. Hence, a
+known saying is:
 
 > Don't miss your Deadline!
 
-![realtime callback frequency](images/realtime-callback.png)
+![realtime callback frequency](images/realtime-callback.png){ width=66% }
 
-*Figure 4* shows the formula to calculate the minimum frequency in what the
-processing function has to serve audio samples, in order to avoid glitches and
-drop-outs. So for 512 individual sampling points, with a sampling frequency of
-48'000 samples per second, we result in callback frequency of **10.67ms**. The
-block-size of the audio typically ranges between 128 - 2048 samples, and the
-sampling frequency is usually between 48'000 - 192'000 Hz. That means that our
-callback frequency has to work with a range of roughly **2.9ms - 46.4ms** in
-order to function properly.
+*Figure 4* presents the formula for determining the minimum frequency at which
+the processing function must supply audio samples to prevent glitches and
+drop-outs. For 512 individual sampling points, at a sample rate of 48,000
+samples per second, the callback frequency stands at **10.67ms**. Audio's
+block-size generally fluctuates between 128 - 2048 samples, with sampling rates
+ranging from 48,000 - 192,000 Hz. Consequently, our callback frequency must
+operate within approximately **2.9ms - 46.4ms** for optimal functionality.
 
-Now this is only the tip of the iceberg. The tricky part lays in writing
-algorithms and data structures that are compatible with those requirements.
-Lets compare the restrictions of a realtime thread and a normal thread that
-doesn't have those requirements:
+This, however, merely scratches the surface. The intricacy lies in devising
+algorithms and data structures that align with these specifications. Comparing
+the constraints of a realtime thread with a standard thread bereft of such
+requirements elucidates this: #TODO:
 
-![realtime limitations](images/realtime-problems.png)
+![realtime limitations[@realtime101]](images/realtime-problems.png)
 
 *Figure 5* compares realtime to non-realtime requirements. In short we can't
 use anything that has non-deterministic behavior. We want to know exactly how
@@ -293,90 +292,80 @@ a non-deterministic behavior. For example to communicate with the main thread
 of the application we use non-blocking and wait free data structures as
 FIFO's^[First In First Out] or ring-buffers to complement this.
 
-Realtime requirements can then be ranked into different aspects again:
+![realtime ranking[@realtime101]](images/realtime-scala.png)
 
-![realtime ranking](images/realtime-scala.png)
+*Figure 6* classifies various realtime systems by their severity (Y-axis) and
+the impact on overall design (X-axis). Realtime can be partitioned into three
+categories: Soft-Realtime, Firm-Realtime, and Hard-Realtime. High-severity
+lapses might have catastrophic consequences. For instance, in medical
+monitoring systems or car braking systems, missing a deadline can be fatal,
+leading to a literal **dead**line. Audio sits in the middle, where a missed
+deadline compromises professional utility but doesn't pose dire threats. Video
+game rendering bears even lesser severity, as occasional frame drops don't
+render the product ineffectual and are relatively commonplace.
 
-*Figure 6* categorizes different realtime systems based on their severity
-(Y-axis) and their resulting importance on the general design structure
-(X-axis). Realtime can be splitted into three different sub-groups:
-Soft-Realtime, Firm-Realtime and Hard-Realtime requirements. That means missing
-something with a high severity can result in fatal outcome. As for instance
-medical monitoring systems or the breaks of a car engine - missing a deadline
-here could potentially result in death, resulting in a literally **dead**line.
-Audio is placed in the middle, as missing a deadline here would render the
-system un-usable for professional use, but at least nothing critical is
-happening. Video game rendering has an even lower severity since a drop of a
-frame would not render the product useless and is a quite regular occurence
-when using such systems.
+### 1.1.4 Audio Plugins: Standards and Hosts
 
-###  1.1.4 Audio Plugins: Standards and Hosts
+Over time, various audio plugin standards have evolved, but only a select few
+remain significant today. The table below provides an overview of some of the
+most well-recognized standards:
 
-There are many audio plugin standards that evolved over time. However only some
-of them are still relevant today. Lets have a look at some of the more well
-known standards:
+| Standard | Extended Name             | Developer        | File Extension       | Supported OS                       | Initial Release | Licensing                                |
+|----------------|---------------------------|-------------------|-----------------------|------------------------------------|-----------------|------------------------------------------|
+| [CLAP](https://cleveraudio.org/)     | Clever Audio Plugin       | Bitwig & U-he     | .clap                | Windows, MacOS & Linux            | 2022            | MIT                                      |
+| [VST/VST3](https://steinbergmedia.github.io/vst3_dev_portal/pages/index.html) | Virtual Studio Technology | Steinberg         | .dll, .vst, .vst3    | Windows, MacOS & Linux            | 2017            | GPLv3, Steinberg Dual License (Email)  |
+| [AAX](https://apps.avid.com/aax-portal/)      | Avid Audio Extension      | Pro Tools (Avid) | .aax                 | Windows & MacOS                   | 2011            | Approved Partner (Email)                 |
+| [AU](https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins)       | Audio Units               | Apple macOS & iOS| .AU                  | MacOS                             | "Cheetah" 2001  | Custom License Agreement                 |
 
-![plugin standards](images/plugin-standards.png)
+Certain standards cater specifically to particular platforms or programs. For
+instance, Apple's **AU** is seamlessly integrated with their core audio
+SDK^[Software Development Kit] [@applecoreaudio]. Similarly, Avid's **AAX** is
+designed exclusively for plugin compatibility with the Pro Tools DAW^[Digital
+Audio Workstation]. On the other hand, standards like the **VST3** SDK are both
+platform and program independent, and it's currently among the most popular
+plugin standards. Additionally, the newly introduced **CLAP** is also gaining
+traction.
 
-*Figure 7* shows some of these plugin standards. They are sorted by their time
-of initial release from left to right. The second row on this table shows the
-extended name of the abbreviated standard name. After that we can see the
-companies that were behind the development of these standards. The fourth row
-shows the file extension those plugins use. However under the hood they are all
-the same - renamed shared libraries. The next row shows the supported operating
-systems for the standard, followed by their initial date of release. The last
-row shows the licensing model that the standard uses.
-
-Some of those standards are platform specific, as Apple's **AU** which provides
-extended integration into their core audio SDK^[Software Development Kit]
-[@applecoreaudio], or they are program specific as Avid's **AAX**, which sole
-purpose is to provide plugin integration with the Pro Tools DAW^[Digital Audio
-Workstation]. Then there are platform and program independent standards as the
-**vst3** sdk which is currently one of the most used plugin standards out
-there, as well as the newest standard **CLAP**.
-
-When it comes to hosting those plugins, it is most often used inside
-**D**igital **A**udio **W**orkstations (DAWs). Those programs are used to work
-with audio and midi to create music, record podcasts or use sound-design
-techniques for custom sounds in games. The usecase is very versatile and there
-are many different DAW manufacturer:
+Most commonly, these plugins are hosted within **Digital Audio Workstations
+(DAWs)**. These software applications facilitate tasks such as music
+production, podcast recording, and creating custom game sound designs. Their
+applicability spans a broad spectrum, and numerous DAW manufacturers exist:
 
 ![plugin hosts](images/plugin-hosts.png)
 
-But plugin hosts are not always DAWs, often the plugin manufacturer include a
-*Standalone* version of their plugin to be used without any extra programs. One
-of the notable recent announcements is withing the games industry, with Unreal
-Engine planning to support the **CLAP** standard in the near future, as
-announced on the *Unreal Fest 2022*[@ueaudio].
+However, DAWs are not the only plugin hosts. Often, plugin developers include a
+*standalone* version that operates independently of other software. A recent
+noteworthy development in this domain is the game industry's move towards these
+plugins, exemplified by Unreal Engine's forthcoming support for the **CLAP**
+standard, as unveiled at *Unreal Fest 2022*[@ueaudio].
 
 ## 1.2 Problem Statement
 
-One of the major issues in the integration of Qt user interfaces with these
-restricted audio plugin environments lays in reentrancy. A program or a
-function is re-entrant if multiple invocations can safely run concurrently, in
-other words they can be "re-entered" from within the same process. This
-behavior is crucial since multiple instances of a plugin are usually created
-from within those loaded shared libraries. Lets have a look at a simple example
-which highlights this problem:
+A primary challenge in integrating Qt user interfaces within restricted audio
+plugin environments hinges on reentrancy. A program or function is considered
+re-entrant if it can safely support concurrent invocations, meaning it can be
+"re-entered" within the same process. Such behavior is vital as audio plugins
+often instantiate multiple times from the loaded shared libraries. To
+illustrate this challenge, consider the following example:
 
 ```cpp
 !include examples/reentrancy.cpp
 ```
 
-Static objects and variables in C++ follow the *static storage duration*:
+In C++, static objects and variables adhere to the [static storage
+duration](https://en.cppreference.com/w/c/language/static_storage_duration):
 
-> The storage for the object is allocated when the program begins and
-> deallocated when the program ends. Only one instance of the object exists.
+> The storage for the object is allocated when the program starts and
+> deallocated when it concludes. Only a single instance of the object exists.
 
-Having only one instance of the object is of key importance here. That means,
-in other words, that there is only one instance per application process. That
-also results in extra care that has to be taken when working with static types
-and reentrancy is required. We get the following result when executing the
-above program:
+The crux here is the singular instance of the object per application process.
+This necessitates caution when working with static types where reentrancy is
+essential. When the above program is executed, the outcome is:
 
 ```bash
 # Compile and run the program
-g++ -o build/reentrancy reentrancy.cpp -Wall -Wextra -pedantic-errors && ./build/reentrancy
+g++ -o build/reentrancy reentrancy.cpp -Wall -Wextra -pedantic-errors \
+;./build/reentrancy
 
 First call:
 Non-Reentrant: 0 1 2
@@ -387,60 +376,65 @@ Non-Reentrant:
 Reentrant: 0 1 2
 ```
 
-The first invocation of both functions works, but upon re-entering the function
-on the second call results in no output for the non-reentrant function. That
-is, because we use the static specifier inside the for loop counter. When
-entering the second time this variable doesn't fulfill the condition of `i < 3`
-anymore. This code is of course far of the reality and it's whole raison d'être
-is to highlight the correlation between *static storage duration* and
-reentrancy of functions.
+While the initial invocation for both functions is successful, re-entering the
+function during the second call yields no output for the non-reentrant
+function. This outcome stems from the use of the static specifier in the for
+loop counter, causing the variable to not meet the `i < 3` condition during the
+second entry. This example serves to emphasize the interplay between *static
+storage duration* and function reentrancy.
 
-Static objects on the other hand can make global access to them very easy and
-can lead to improved design decisions when developing applications.
-
-The QApplications (QCoreApplication, QGuiApplication, ...), which contain the
-event loop of Qt and which is started with the member function
-`Q*Application::exec()` is of such static type:
+While static objects facilitate global accessibility and can foster improved
+application design, challenges arise. For instance, the QApplication variants
+(e.g., QCoreApplication, QGuiApplication), housing the Qt event loop initiated
+via `Q*Application::exec()`, are static:
 
 ```c++
 // qtbase/src/corelib/kernel/qcoreapplication.h
 static QCoreApplication *instance() noexcept { return self; }
 ```
 
-This mean there can only ever exist one QApplication per process. If the
-plugin-loading-host now uses a QApplication object, as the DAW [QTractor
+This implies that only one QApplication can exist per process. Challenges arise
+if a plugin-loading-host, like [QTractor
 does](https://github.com/rncbc/qtractor/blob/0e987e6c41796a4cbe85e499ae890b5989be8b82/src/qtractor.h#L60),
-or we load multiple instances of the plugin from within the same process this
-won't work anymore.
+employs a QApplication object or when multiple plugin instances load within a
+single process.
 
-Another point is the blocking aspect of Qt's event loop. The event loop
-`Q*Application::exec()` only returns after finishing its execution. But all
-functions used in the mentioned plugin standards require to return from it.
+Furthermore, event loop's blocking nature means that `Q*Application::exec()`
+only returns post-execution. Yet, the plugin standards in discussion
+necessitate return capabilities.
 
-Now there are many ways to hack your way around those problems, as to compile
-Qt in a seperate namespace and to start the event loop in a dedicated thread.
-But none of those 'techniques' really prooved successfull to work on all
-platforms and provide a stable solution. Either the development experience
-would be very complex and time consuming (compiling Qt in a seperate
-namespace), or it just results in an unstable and unsupported state (starting
-the event loop in a seperate thread).
+Although there are various workarounds, like compiling Qt under a separate
+namespace and initiating the event loop in an isolated thread, these often fall
+short. Such methods either introduce undue complexity, as seen with namespace
+compilation for their users, or induce instability, as with separate thread
+initiation.
 
 ## 1.3 Objectives
 
-The goal for this work is to research new methods that would allow for the creation
-of graphical user interfaces with the Qt framework in combination with a
-plugin standard. It should be possible to start the GUI from within a host
-and have a working communication in both sides (host <-> GUI). The development
-of Qt GUIs should feel native, that is, events coming from the host should be
-integrated into Qts event system and should provide signal & slots for usage
-in the UI components.
-
+This study endeavors to pave the way for innovative techniques that allow
+seamless integration of graphical user interfaces developed with the Qt
+framework into an audio plugin standard. Central to this goal is enabling the
+initiation of these GUIs directly from a host, while ensuring efficient and
+responsive communication between the two entities (host <-> GUI). The overall
+user experience is pivotal; hence, the development process of these Qt GUIs
+should not only feel native but also be intuitive. This implies that events
+triggered by the host should effortlessly weave into Qt's event system.
+Additionally, these events should be designed to offer signal & slot
+mechanisms, ensuring they are readily available for utilization within various
+UI components, streamlining development and promoting a more organic
+interaction between components.
 
 ## 1.4 Scope and Limitations
 
-This work will use the **CLAP** plugin standard, as it's the newest and most
-promising standard. The Scope of this work is to find a way to integrate those
-two environments (audio plugins and Qt GUIs) but not providing a cross platform
-solution. The targeted platform will be Linux and both protocols, X11 and Wayland
-should be supported with this work.
+The cornerstone of this investigation is the **CLAP** plugin standard.
+Recognized for its innovative capabilities and being at the forefront of
+current technologies, it stands as the most promising contender for such
+integration tasks. The primary ambition of this work revolves around bridging
+the gap between the two distinct realms of audio plugins and Qt GUIs. However,
+it's imperative to note that this research doesn't aim to deliver a universal,
+cross-platform solution. The focus remains steadfast on the Linux platform,
+ensuring compatibility and support for both X11 and Wayland protocols. By
+confining the research to this scope, the study seeks to delve deeper into the
+intricacies and nuances of the integration process, ensuring a robust and
+effective methodology.
 
