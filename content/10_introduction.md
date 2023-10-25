@@ -272,10 +272,14 @@ block-size generally fluctuates between 128 - 2048 samples, with sampling rates
 ranging from 48,000 - 192,000 Hz. Consequently, our callback frequency must
 operate within approximately **2.9ms - 46.4ms** for optimal functionality.
 
-This, however, merely scratches the surface. The intricacy lies in devising
-algorithms and data structures that align with these specifications. Comparing
-the constraints of a realtime thread with a standard thread bereft of such
-requirements elucidates this: #TODO:
+However, this is just the tip of the iceberg. The real challenge lies in
+crafting algorithms and data structures that adhere to these specifications.
+Drawing a comparison between the constraints of a realtime thread and a
+standard thread without these stipulations brings this into sharper focus: <In
+a realtime thread, responses must meet specific deadlines, ensuring immediate
+and predictable behavior. In contrast, a standard thread has more flexibility
+in its operation, allowing for variable response times without the stringent
+need for timely execution.>
 
 ![realtime limitations[@realtime101]](images/realtime-problems.png)
 
@@ -289,8 +293,8 @@ deal with realtime requirements. This results in careful design decisions that
 have to be taken when designing such systems. We have to foresee many aspects
 of the architecture and use pre-allocated containers and structures to prevent
 a non-deterministic behavior. For example to communicate with the main thread
-of the application we use non-blocking and wait free data structures as
-FIFO's^[First In First Out] or ring-buffers to complement this.
+of we use non-blocking and wait free data structures as FIFO's^[First In First
+Out] or ring-buffers to complement this.
 
 ![realtime ranking[@realtime101]](images/realtime-scala.png)
 
@@ -310,21 +314,21 @@ Over time, various audio plugin standards have evolved, but only a select few
 remain significant today. The table below provides an overview of some of the
 most well-recognized standards:
 
-| Standard | Extended Name             | Developer        | File Extension       | Supported OS                       | Initial Release | Licensing                                |
-|----------------|---------------------------|-------------------|-----------------------|------------------------------------|-----------------|------------------------------------------|
-| [CLAP](https://cleveraudio.org/)     | Clever Audio Plugin       | Bitwig & U-he     | .clap                | Windows, MacOS & Linux            | 2022            | MIT                                      |
-| [VST/VST3](https://steinbergmedia.github.io/vst3_dev_portal/pages/index.html) | Virtual Studio Technology | Steinberg         | .dll, .vst, .vst3    | Windows, MacOS & Linux            | 2017            | GPLv3, Steinberg Dual License (Email)  |
-| [AAX](https://apps.avid.com/aax-portal/)      | Avid Audio Extension      | Pro Tools (Avid) | .aax                 | Windows & MacOS                   | 2011            | Approved Partner (Email)                 |
-| [AU](https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins)       | Audio Units               | Apple macOS & iOS| .AU                  | MacOS                             | "Cheetah" 2001  | Custom License Agreement                 |
+|   Standard   |   Extended Name   | Developer | File Extension | Supported OS  | Initial Release |   Licensing   |
+|--------------|-------------------|-----------|----------------|---------------|-----------------|---------------|
+| [CLAP](https://cleveraudio.org/) | Clever Audio Plugin | Bitwig & U-he | .clap | Windows, MacOS & Linux | 2022 | MIT |
+| [VST/VST3](https://steinbergmedia.github.io/vst3_dev_portal/pages/index.html) | Virtual Studio Technology | Steinberg | .dll, .vst, .vst3 | Windows, MacOS & Linux | 2017 | GPLv3, Steinberg Dual License (Email) |
+| [AAX](https://apps.avid.com/aax-portal/)| Avid Audio Extension | Pro Tools (Avid) | .aax | Windows & MacOS | 2011 | Approved Partner (Email) |
+| [AU](https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins) | Audio Units | Apple macOS & iOS| .AU | MacOS | "Cheetah" 2001 | Custom License Agreement |
 
 Certain standards cater specifically to particular platforms or programs. For
 instance, Apple's **AU** is seamlessly integrated with their core audio
 SDK^[Software Development Kit] [@applecoreaudio]. Similarly, Avid's **AAX** is
-designed exclusively for plugin compatibility with the Pro Tools DAW^[Digital
-Audio Workstation]. On the other hand, standards like the **VST3** SDK are both
-platform and program independent, and it's currently among the most popular
-plugin standards. Additionally, the newly introduced **CLAP** is also gaining
-traction.
+designed exclusively for plugin compatibility with the [Pro
+Tools](https://www.avid.com/pro-tools) DAW^[Digital Audio Workstation]. On the
+other hand, standards like the **VST3** SDK are both platform and program
+independent, and it's currently among the most popular plugin standards.
+Additionally, the newly introduced **CLAP** standard is also gaining traction.
 
 Most commonly, these plugins are hosted within **Digital Audio Workstations
 (DAWs)**. These software applications facilitate tasks such as music
@@ -337,7 +341,8 @@ However, DAWs are not the only plugin hosts. Often, plugin developers include a
 *standalone* version that operates independently of other software. A recent
 noteworthy development in this domain is the game industry's move towards these
 plugins, exemplified by Unreal Engine's forthcoming support for the **CLAP**
-standard, as unveiled at *Unreal Fest 2022*[@ueaudio].
+standard, as unveiled at [Unreal Fest
+2022](https://www.youtube.com/watch?v=q9pFsI9Cq9c&t=621s).
 
 ## 1.2 Problem Statement
 
@@ -383,21 +388,38 @@ loop counter, causing the variable to not meet the `i < 3` condition during the
 second entry. This example serves to emphasize the interplay between *static
 storage duration* and function reentrancy.
 
-While static objects facilitate global accessibility and can foster improved
-application design, challenges arise. For instance, the QApplication variants
-(e.g., QCoreApplication, QGuiApplication), housing the Qt event loop initiated
-via `Q*Application::exec()`, are static:
+While static objects offer global accessibility and potentially enhance
+application design, they also present certain challenges. For example, the
+QApplication variants, such as QCoreApplication and QGuiApplication, which
+manage the Qt event loop through `Q*Application::exec()`, are static:
 
 ```c++
 // qtbase/src/corelib/kernel/qcoreapplication.h
 static QCoreApplication *instance() noexcept { return self; }
 ```
 
-This implies that only one QApplication can exist per process. Challenges arise
-if a plugin-loading-host, like [QTractor
+This design choice means only one QApplication can exist within a process.
+Issues arise when a plugin-loading-host, as [QTractor
 does](https://github.com/rncbc/qtractor/blob/0e987e6c41796a4cbe85e499ae890b5989be8b82/src/qtractor.h#L60),
-employs a QApplication object or when multiple plugin instances load within a
-single process.
+utilizes a QApplication object or when multiple plugin instances operate within
+a singular process. At first glance, one might assume the ability to verify the
+presence of a QApplication within the process and then conveniently reuse its
+event loop:
+
+```c++
+~~~
+   if (!qGuiApp) {
+       static int argc = 1; static char *argv[] = { const_cast<char*>("") };
+       new QGuiApplication(argc, argv);
+   }
+~~~
+```
+
+However, while this approach occasionally proves successful, it's fraught with
+uncertainties. For instance, what if we inadvertently latch onto an event loop
+from an outdated version? And how does the system handle multiple instances
+simultaneously connecting to the event loop? Evidently, this method offers an
+*unreliable* remedy for addressing the issue at hand.
 
 Furthermore, event loop's blocking nature means that `Q*Application::exec()`
 only returns post-execution. Yet, the plugin standards in discussion
@@ -420,7 +442,7 @@ user experience is pivotal; hence, the development process of these Qt GUIs
 should not only feel native but also be intuitive. This implies that events
 triggered by the host should effortlessly weave into Qt's event system.
 Additionally, these events should be designed to offer signal & slot
-mechanisms, ensuring they are readily available for utilization within various
+mechanisms, ensuring they are easily available for utilization within various
 UI components, streamlining development and promoting a more organic
 interaction between components.
 
@@ -432,9 +454,9 @@ current technologies, it stands as the most promising contender for such
 integration tasks. The primary ambition of this work revolves around bridging
 the gap between the two distinct realms of audio plugins and Qt GUIs. However,
 it's imperative to note that this research doesn't aim to deliver a universal,
-cross-platform solution. The focus remains steadfast on the Linux platform,
-ensuring compatibility and support for both X11 and Wayland protocols. By
-confining the research to this scope, the study seeks to delve deeper into the
-intricacies and nuances of the integration process, ensuring a robust and
-effective methodology.
+cross-platform solution. The development focuses on Linux, ensuring
+compatibility and support for both X11 and Wayland protocols. By confining the
+research to this scope, the study seeks to delve deeper into the intricacies
+and nuances of the integration process, ensuring a robust and effective
+methodology.
 
