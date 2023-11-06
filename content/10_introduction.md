@@ -1,7 +1,7 @@
 # Chapter 1: Introduction
 
 Throughout this work, we will discuss plugins and their impact on the usability
-of an application. Specifically, we will delve into the development of
+of an application. Specifically, we will focus on the development of
 graphical user interfaces (GUIs) for audio plugins, examining their influence
 on user experiences and their relationship with development experiences. When
 considering GUIs^[Graphical User Interfaces] broadly, it's natural to
@@ -293,8 +293,8 @@ deal with realtime requirements. This results in careful design decisions that
 have to be taken when designing such systems. We have to foresee many aspects
 of the architecture and use pre-allocated containers and structures to prevent
 a non-deterministic behavior. For example to communicate with the main thread
-of we use non-blocking and wait free data structures as FIFO's^[First In First
-Out] or ring-buffers to complement this.
+of we often use non-blocking and wait free data structures as FIFO^[First In First
+Out] queues or ring-buffers to complement this.
 
 ![realtime ranking[@realtime101]](images/realtime-scala.png)
 

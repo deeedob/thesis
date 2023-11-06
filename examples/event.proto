@@ -1,0 +1,19 @@
+// event.proto
+syntax = "proto3";
+
+// Namespace for this file
+package example;
+
+enum Type {
+    CREATED = 0;
+}
+
+// Strongly-typed event. The numbered attributes of each field are used to
+// encode the field's position in the serialized message.
+message Event {
+    Type id = 1;
+    string name = 2;
+    // Schema evolution allows for new fields to be
+    // added, while maintaining backwards compatibility
+    optional string description = 3; // New field added at a later revision
+}

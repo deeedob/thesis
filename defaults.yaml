@@ -9,11 +9,9 @@ filters:
 input-files:
   - content/00_header.md
   - content/10_introduction.md
-  - content/20_qt.md
-  - content/30_clap.md
-  - content/40_qt_x_clap.md
-  - content/50_results.md
-  - content/60_summary.md
+  - content/20_clap.md
+  - content/30_grpc.md
+  - content/40_qt.md
   - content/99_bibliography.md
 
 toc: true
