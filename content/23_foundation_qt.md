@@ -1,6 +1,4 @@
-# Chapter 4: The Qt Framework
-
-## 4.1 Introduction
+## 2.3 The Qt Framework
 
 [Qt](https://www.qt.io/), emerging in the early 90s from Trolltech in Norway,
 stands out in the landscape of software development for its robust toolkit that
@@ -11,11 +9,10 @@ with little need for modification, streamlining the development process
 significantly.
 
 After its acquisition by Nokia in 2008, Qt has continued to thrive under the
-stewardship of The Qt Company, which is responsible for its ongoing development
-and maintenance. Qt's licensing offers two distinct paths: the GNU (L)GPL
-license, underscoring a community-driven spirit, and a commercial license,
-catering to developers wishing to retain proprietary control over their
-software.
+guidance of The Qt Company, which is responsible for its ongoing development
+and maintenance. Qt provides two licensing options: the GNU (L)GPL license,
+promoting a community-driven approach, and a commercial license for developers
+who prefer to maintain exclusive control over their software.
 
 Qt's versatility extends beyond its C++ core, offering language bindings for
 additional programming languages, with Python being a notable example through
@@ -23,16 +20,16 @@ additional programming languages, with Python being a notable example through
 facilitates rapid development by allowing the integration of Qt's powerful C++
 modules within Python's flexible scripting environment.
 
-## 4.2 Core Techniques
+### 2.3.1 Core Techniques
 
 Central to Qt is its [Signals &
 Slots](https://doc.qt.io/qt-6/signalsandslots.html) mechanism, which can be
-thought of as a flexible implementation of the observer pattern. In this
-framework, a 'signal' represents an observable event, while a 'slot' is akin to
-an observer that can react to that event. This design allows for a many-to-many
-relationship meaning any signal may be connected to any number of slots. This
-concept has been fundamental to Qt since its first release in 1994 and the concept
-of signals and slots is so compelling that it has become a part of the computer
+thought of as a flexible implementation of the observer pattern. A 'signal'
+represents an observable event, while a 'slot' is comparable to an observer that can
+react to that event. This design allows for a many-to-many relationship meaning
+any signal may be connected to any number of slots. This concept has been
+fundamental to Qt since its first release in 1994 and the concept of signals
+and slots is so compelling that it has become a part of the computer
 science landscape.
 
 Essential for the reactive nature of graphical user interfaces, signals & slots
@@ -124,17 +121,17 @@ int main(int argc, char* argv[])
 }
 ```
 
-The provided code snippet sets the stage for showcasing Qt's signal and slot
-mechanism by setting up a series of connections between a signal and various
-slot types using `QObject::connect`. In a typical compilation scenario for such a
-Qt application on a Linux system, you'd run a command like:
+The given code snippet demonstrates Qt's signal and slot mechanism by setting
+up a series of connections between a signal and various slot types using
+`QObject::connect`. In a typical compilation scenario for such a Qt application
+on a Linux system, you'd run a command like:
 
 ```bash
-g++ -std=c++17 -fPIC -I/usr/include/qt6 -I/usr/include/qt6/QtCore -o build/signals_and_moc signals_and_moc.cpp -lQt6Core
+g++ -std=c++17 -I/usr/include/qt6 -I/usr/include/qt6/QtCore -lQt6Core -fPIC -o build/signals_and_moc signals_and_moc.cpp
 ```
 
-Yet, this straightforward compilation attempt will be met with linker errors, a
-sign that something is amiss:
+However, this direct approach to compile the file will be met with linker
+errors, a sign that something is missing:
 
 ```bash
 /usr/bin/ld: /tmp/ccbsQpDO.o: in function `main':
@@ -143,10 +140,12 @@ signals_and_moc.cpp:(.text+0x2e4): undefined reference to `MyObject::dataChanged
 signals_and_moc.cpp:(.text._ZN8MyObjectC2EP7QObject[_ZN8MyObjectC5EP7QObject]+0x26): undefined reference to `vtable for MyObject'
 ```
 
-These errors indicate that the Meta-Object Compiler (moc) needs to process the
-code. The moc tool is integral to Qt's signal and slot system, and without it,
-the necessary meta-object code that facilitates these connections is not
-generated, leading to the undefined references. To correct the compilation
+These errors indicate that we have a missing implementation for our
+`dataChanged` function, which handles the signaling mechanism of our object.
+This is where the meta-object-compiler comes into play and provides the needed
+(boilerplate) implementation to this function. The moc is integral to Qt's
+signal and slot system, and without it, the necessary meta-object code that
+facilitates these connections is not generated. To correct the compilation
 process, moc must be run on the source files containing the Q_OBJECT macro
 before the final compilation step.
 
@@ -160,7 +159,7 @@ echo '#include "gen.moc"' >> signals_and_moc.cpp
 
 A closer look at the output from moc uncovers the previously missing pieces,
 providing the essential implementation for our `dataChanged` signal and
-clarifying how moc underpins the signal's operations.
+clarifying how moc underpins the signal's integration.
 
 ```cpp
 // SIGNAL 0
@@ -182,7 +181,7 @@ output could look like this:
 Rejected data:  0
 ```
 
-## 4.3 Graphics
+### 2.3.2 Graphics
 
 Within the vast expanse of the Qt universe, developers are presented with two
 primary paradigms for GUI crafting: Widgets and QML. Widgets offer the
@@ -209,10 +208,10 @@ groundwork by offering the QML and JavaScript engines, overseeing the core
 mechanics, QtQuick comes equipped with fundamental types imperative for
 spawning user interfaces in QML. This library furnishes the visual canvas and
 encompasses a suite of types tailored for creating and animating visual
-entities.
+components.
 
 A significant distinction between Widgets and QML lies in their rendering
-methodologies. Widgets, relying on software rendering, primarily lean on the
+approach. Widgets, relying on software rendering, primarily lean on the
 CPU for graphical undertakings. This sometimes prevents them from harnessing
 the full graphical capabilities of a device. QML, however, pivots this paradigm
 by capitalizing on the hardware GPU, ensuring a more vibrant and efficient
@@ -229,19 +228,19 @@ underscores Qt's steadfast dedication to strengthen its robust cross-platform
 capabilities, aiming to create a unified experience across various graphic
 backends.
 
-![Qt Rendering Hardware Interface [RHI](https://doc.qt.io/qt-6/topics-graphics.html)](images/qt_rhi.png)
+![Qt Rendering Hardware Interface [RHI](https://doc.qt.io/qt-6/topics-graphics.html)](images/qt_rhi.png){#fig:qrhi}
 
-*Figure 8* delineates the architecture of the prevailing rendering interface.
-At the foundational layer, we find the native graphic APIs, encompassing the
-likes of OpenGL, Vulkan, Metal, and Direct 3D 11. Positioned just above is the
-QWindows implementation, which is housed within the QtGui module of Qt.
-Notably, QtWidgets occupies a niche between these two levels. Given that
-Widgets emerged before the QRhi module, their integration with QRhi isn't as
-profound. While certain widgets do offer OpenGL capabilities, their primary
-reliance is on the [QPainter](https://doc.qt.io/qt-6/qpainter.html#drawing)
-API. Ascending to the subsequent tier, we are greeted by the Qt Rendering
-Hardware Interface, which serves as a crucial bridge, offering an abstraction
-layer over hardware-accelerated graphics APIs.
+*@fig:qrhi* presents the layered architecture of the rendering interface. At
+its base, it supports native graphic APIs such as OpenGL, Vulkan or Metal.
+Positioned just above is the QWindows implementation, which is housed within
+the QtGui module of Qt. Notably, QtWidgets occupies a niche between these two
+levels. Given that Widgets emerged before the QRhi module, their integration
+with QRhi isn't as profound. While certain widgets do offer OpenGL
+capabilities, their primary reliance is on the
+[QPainter](https://doc.qt.io/qt-6/qpainter.html#drawing) API. Ascending to the
+subsequent tier, we are greeted by the Qt Rendering Hardware Interface, which
+serves as a crucial bridge, offering an abstraction layer over
+hardware-accelerated graphics APIs.
 
 > **Note:** As of this writing, QRHI maintains a limited compatibility
 > assurance, implying potential shifts in its API. However, such changes are
@@ -251,11 +250,11 @@ Further up the hierarchy, the QtQuick and QtQuick3D modules showcase Qt's
 progression in graphics rendering.
 
 In essence, Qt delivers a comprehensive framework for designing user interfaces
-that cater to the diverse array of existing platforms. It extends a broad
-spectrum of configuration and customization options, enabling developers to tap
-into lower-level abstractions for crafting bespoke extensions tailored to
-specific project requirements—all while preserving cross-platform
-functionality. Beyond the foundational modules geared toward GUI development,
+that cater to the diverse array of existing platforms. It provides a broad
+spectrum of configuration and customization options and even enabling
+developers to tap into lower-level abstractions for crafting custom extensions
+tailored to specific project requirements—all while preserving *cross-platform
+functionality*. Beyond the foundational modules geared toward GUI development,
 Qt also offers a rich suite of additional modules. These include resources for
 localizing applications with
 [qttranslations](https://code.qt.io/cgit/qt/qttranslations.git/), handling
@@ -267,7 +266,7 @@ connectivity and networking options. Modules such as
 addition, [qtgrpc](https://code.qt.io/cgit/qt/qtgrpc.git/), facilitate the
 integration of Qt into an even wider range of systems.
 
-## 4.2 QtGrpc and QtProtobuf
+### 2.3.3 QtGrpc and QtProtobuf
 
 The [QtGrpc](https://doc.qt.io/qt-6/qtgrpc-index.html) module, which is in a
 technical preview stage as of Qt version 6.6, represents an innovative addition

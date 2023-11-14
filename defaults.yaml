@@ -9,9 +9,12 @@ filters:
 input-files:
   - content/00_header.md
   - content/10_introduction.md
-  - content/20_clap.md
-  - content/30_grpc.md
-  - content/40_qt.md
+  - content/20_foundation_plugins.md
+  - content/21_foundation_clap.md
+  - content/22_foundation_grpc.md
+  - content/23_foundation_qt.md
+  - content/30_remote_plugins.md
+  - content/40_conclusions.md
   - content/99_bibliography.md
 
 toc: true
@@ -20,6 +23,5 @@ embed-resources: true
 highlight-style: tango
 
 cite-method: citeproc
-csl: https://www.zotero.org/styles/hochschule-bonn-rhein-sieg
 
 output-file: thesis.pdf

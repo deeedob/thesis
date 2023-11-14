@@ -52,5 +52,4 @@ geometry: [a4paper, bindingoffset=0mm, inner=30mm, outer=30mm, top=30mm, bottom=
 figureTitle: Figure
 figPrefix: Figure
 graphics: yes
-
 ---

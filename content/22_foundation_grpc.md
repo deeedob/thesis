@@ -1,6 +1,4 @@
-# Chapter 3: gRPC
-
-## 3.1 Introduction
+## 2.3 gRPC - Remote Procedure Calls
 
 In today's fast-paced software development landscape, there is a growing need
 for efficient communication between various software systems. Addressing this
@@ -14,9 +12,9 @@ wide range of programming languages, and a steadily increasing adoption rate.
 These attributes have positioned gRPC as a leading choice for inter-service
 communication in contemporary software architecture.
 
-![gRPC supported languages](images/grpc_langs.png)
+![gRPC supported languages](images/grpc_langs.png){ width=66% }
 
-## 3.2 Protobuf: The Backbone of gRPC
+### 2.3.1 Protobuf
 
 Central to gRPC's efficiency and flexibility is the *Protocol Buffer*, often
 abbreviated as protobuf. Developed by Google, protobuf is a serialization
@@ -129,7 +127,7 @@ format, and its contents used by the application. The benefits of protobuf's
 efficiency become even more pronounced when contrasted with heftier formats
 like JSON or XML.
 
-## 3.3 gRPC Core Concepts
+### 2.3.2 gRPC Core Concepts
 
 #### Channels
 
@@ -148,13 +146,12 @@ and its clients.
 are the client-side representation of a gRPC service. They provide
 methods corresponding to the service methods defined in the .proto files.
 
-#### Streaming
+#### Calls and Streams
 
-in gRPC is a salient feature that facilitates continuous data exchange between
-the client and the server. Notably, even unary calls in gRPC are inherently
-treated as streams. The four primary types of streaming are:
+in gRPC provide the functionality for continuous data exchange between the
+client and the server. The four primary RPC types are:
 
-1. Unary: This is the most common type, similar to a regular function call
+1. Unary Calls: This is the most common type, similar to a regular function call
    where the client sends a single request and gets a single response.
 2. Server Streaming: The client sends a single request and receives multiple
    responses. Useful when the server needs to push data continuously after
@@ -169,7 +166,7 @@ treated as streams. The four primary types of streaming are:
 
 ![gRPC high-level overview](images/grpc_abstract.svg){width=77%}
 
-## 3.4 gRPC Performance
+### 2.3.3 Performance
 
 Traditional HTTP protocols don't support sending multiple requests or receiving
 multiple responses concurrently within a single connection. Each request or
@@ -180,9 +177,9 @@ introduction of the binary framing layer in HTTP/2 enables such
 request/response multiplexing. This ability to handle streaming efficiently is
 a significant factor behind gRPC's enhanced performance.
 
-![gRPC streaming [benchmarks](https://grafana-dot-grpc-testing.appspot.com/d/18sWlbd7z/grpc-performance-multi-language-on-gke-atupstream-master?viewPanel=8)](images/grpc_benchmarks.png)
+![gRPC streaming [benchmarks](https://grafana-dot-grpc-testing.appspot.com/d/18sWlbd7z/grpc-performance-multi-language-on-gke-atupstream-master?viewPanel=8)](images/grpc_benchmarks.png){#fig:grpcbench}
 
-As depicted in *Figure 11*, the performance benchmarks highlight the latencies
+As depicted in *@fig:grpcbench*, the performance benchmarks highlight the latencies
 associated with various gRPC clients when interfaced with a C++ server
 implementation. The results reveal a spectrum of latencies, with some as low as
 100 microseconds (us) and others peaking around 350 us. Importantly, these
