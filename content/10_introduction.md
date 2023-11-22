@@ -5,7 +5,7 @@
 Throughout this work, we will discuss plugins and their impact on the usability
 of an application. Specifically, we will focus on the development of graphical
 user interfaces (GUIs) for audio plugins, examining their influence on user
-experiences and their relationship with development experiences. When
+experiences and their relationship with development workflow. When
 considering GUIs broadly, it's natural to contemplate their flexibility and
 stability. The sheer number of operating systems, graphic backends, and
 platform-specific details is more than any single developer could realistically
@@ -14,9 +14,8 @@ address.
 Investing time in learning and potentially mastering a skill naturally leads to
 the desire to apply it across various use-cases. Opting for a library that has
 *withstood the test of time* enhances stability, yet professionals often seek
-continuity, preferring not to re-acquaint themselves with a topic merely because the
-API^[Application Programming Interface] of the chosen toolkit doesn't support
-the targeted platform.
+continuity, preferring not to re-acquaint themselves with a subject solely due
+to the limitations of their chosen toolkit for the next project.
 
 Therefore, Qt, a cross-platform framework for crafting GUIs, comes to mind when
 considering the development of an audio plugin UI^[User Interface] intended
@@ -32,9 +31,9 @@ The significance of this subject becomes evident when browsing the forum
 
 A brief search of: `"Qt" "Plugin" :site www.kvraudio.com`
 
-uncovers 57'800 results, with 580 from the span between 10/19/2022 and
-10/19/2023. While the weight of such figures may be debated, they undeniably
-highlight the relevance and potential of Qt as a viable choice for audio plugin
+uncovers *57'800* results, with *580* from the span between *10/19/2022* and
+*10/19/2023*. While the weight of such figures may be debated, they certainly
+suggest the relevance and potential of Qt as a feasible option for audio plugin
 development.
 
 ## 1.2 Objective
@@ -91,7 +90,7 @@ Qt's event loop through `Q*Application::exec()`, are static:
 
 ```c++
 // qtbase/src/corelib/kernel/qcoreapplication.h
-static QCoreApplication *instance() noexcept { return self; }
+static QCoreApplication *self;
 ```
 
 This design choice means only one QApplication can exist within a process.
@@ -144,6 +143,3 @@ intended integration tasks. The usage of CLAP emphasizes the study's aim to
 tackle the intricate challenges of integrating Qt's comprehensive GUI framework
 with the dynamic field of audio plugins.
 
-## 1.3 Structure
-
-TODO: Structure

@@ -59,7 +59,6 @@ platform or packaged with the application.
 
 A canonical example is the *standard C library* (libc). Given its presence in
 nearly every application, the efficiency of shared libraries becomes evident.
-  
 To demonstrate, we'll examine the shared object dependencies of some standard
 applications using the Linux utility **ldd**:
 
@@ -132,13 +131,13 @@ To finalize this example, lets write a minimal build script and run our
 `simplehost` executable.
 
 ```bash
-!include examples/build_and_run.sh
+!include examples/simplelib.sh
 ```
 
 And finally run our script:
 
 ```bash
-./build_and_run
+./simplelib
 simplelib: called from simplelib.cpp:18
 ```
 
@@ -190,7 +189,7 @@ without disrupting existing functionalities.
 In the realm of audio plugins, two primary components define their structure:
 the realtime audio section and the control section.
 
-![basic audio plugin architecture](images/audio-plugin-basic.png){#fig:plugbasic} 
+![basic audio plugin architecture](images/audio-plugin-basic.png){#fig:plugbasic}
 
 *@fig:plugbasic*, shows a typical plugin interface with two distinct colors for
 clarity. The green section represents the plugin's interaction with the host

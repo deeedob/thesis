@@ -5,7 +5,7 @@ help:
 	head -2 Makefile
 
 thesis-pdf:
-	pandoc -F pandoc-crossref --citeproc --defaults=defaults.yaml --include-in-header=thesis.tex
+	pandoc --defaults=project.yaml --highlight-style tango
 
 detect-images:
 	grep -ohr "images/.*" content/

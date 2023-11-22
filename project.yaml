@@ -1,0 +1,136 @@
+pdf-engine: xelatex
+from: markdown+fancy_lists+implicit_figures+emoji+auto_identifiers
+to: pdf
+output-file: thesis.pdf
+
+filters:
+  - pandoc-crossref
+  - pandoc-include
+  - mermaid-filter
+  - citeproc
+
+input-files:
+  - content/00_header.md
+  - content/10_introduction.md
+  - content/20_foundation_plugins.md
+  - content/21_foundation_clap.md
+  - content/22_foundation_grpc.md
+  - content/23_foundation_qt.md
+  - content/30_state_of_the_art.md
+  - content/40_remote_plugins.md
+  - content/41_qgrpc_client.md
+  - content/50_conclusion.md
+  - content/60_acknowledgement.md
+  - content/99_bibliography.md
+
+variables:
+  book: true
+  papersize: a4
+  geometry:
+    - a4paper
+    - bindingoffset=0mm
+    - inner=30mm
+    - outer=30mm
+    - top=30mm
+    - bottom=30mm
+  linestretch: 1.25
+  color-links: true
+  link-citations: true
+  citecolor: blue
+  linkcolor: blue
+  urlcolor: blue
+  toc: true
+  toc-depth: 3
+  toc-title: 'Contents'
+  # highlight-style: tango # Can't set the style here?
+  embed-resources: true
+  cite-method: citeproc
+  classoption:
+    - titlepage
+    - openright
+    - DIV=calc
+    - toc=listof
+    - listof=nochaptergap
+  figureTitle: Figure
+  figPrefix: Figure
+  graphics: yes
+  fontsize: 13
+  mainfont: TitilliumWeb
+  listings-no-page-break: true
+  mainfontoptions:
+    - Path = ./resources/fonts/main/
+    - Extension = .ttf,
+    - UprightFont = *-Regular,
+    - BoldFont = *-Bold,
+    - ItalicFont = *-Italic,
+    - BoldItalicFont = *-BoldItalic
+  monofont: JetBrainsMonoNerdFontMono
+  monofontoptions:
+    - Path = ./resources/fonts/mono/
+    - Extension = .ttf,
+    - UprightFont = *-Regular,
+    - BoldFont = *-Bold,
+    - ItalicFont = *-Italic,
+    - BoldItalicFont = *-BoldItalic
+    - Scale = 0.8
+  mathfont: Fira Math
+  header-includes: |
+      %pandoc-crossref messes with header-includes so lets un-mess it...
+      \usepackage{float}
+      \floatstyle{ruled}
+      \makeatletter
+      \@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+      \floatname{codelisting}{Listing}
+      \makeatother
+
+      % each h1 header on seperate line
+      \usepackage{sectsty}
+      \sectionfont{\clearpage}
+
+      % footnotes at the bottom
+      \usepackage[bottom]{footmisc}
+
+      % style blockquotes
+      % change style of quote, see also https://tex.stackexchange.com/a/436253/114857
+      \usepackage[most]{tcolorbox}
+      \definecolor{linequote}{HTML}{FDF6E3}
+      \definecolor{backquote}{HTML}{FDF6E3}
+      \definecolor{bordercolor}{HTML}{F57D26}
+      \newtcolorbox{myquote}[1][]{%
+          enhanced,
+          breakable,
+          size=minimal,
+          left=10pt,
+          top=5pt,
+          frame hidden,
+          boxrule=0pt,
+          sharp corners=all,
+          colback=backquote,
+          borderline west={2pt}{0pt}{bordercolor},
+          #1
+      }
+      % redefine quote environment to use the myquote environment, see https://tex.stackexchange.com/a/337587/114857
+      \renewenvironment{quote}{\begin{myquote}}{\end{myquote}}
+
+      % change background color for inline code in
+      \usepackage{xcolor}
+      \definecolor{bgcolor}{HTML}{EBEBEB}
+      \let\oldtexttt\texttt
+      \renewcommand{\texttt}[1]{
+        \colorbox{bgcolor}{\oldtexttt{#1}}
+      }
+
+      % code-blocks should wrap as well
+      \usepackage{fvextra}
+      \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+
+      % Improve text and figure positioning to stay in sync.
+      \usepackage{float}% http://ctan.org/pkg/float
+      \let\origfigure\figure
+      \let\endorigfigure\endfigure
+      \renewenvironment{figure}[1][2] {
+          \expandafter\origfigure\expandafter[H]
+      } {
+          \endorigfigure
+      }
+

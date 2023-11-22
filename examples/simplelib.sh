@@ -1,5 +1,5 @@
 #!/bin/bash
-# build_and_run.sh
+# simplelib.sh
 
 mkdir -p build
 # Compile the shared library. PIC means position independent code and
