@@ -16,7 +16,7 @@ input-files:
   - content/21_foundation_clap.md
   - content/22_foundation_grpc.md
   - content/23_foundation_qt.md
-  - content/30_state_of_the_art.md
+  - content/30_related_work.md
   - content/40_remote_plugins.md
   - content/41_qgrpc_client.md
   - content/50_conclusion.md

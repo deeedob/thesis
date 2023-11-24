@@ -41,12 +41,12 @@ appreciated and benefitted from that.
 Furthermore I want to give a special thanks to *Alexandre Bique*. We initially
 met on the SUPERBOOTH23, where I approached him and we quickly got into
 discussions about plugins, GUIs and the desiring need to improve that
-landscape. He works at Bitwig and he is the inventor of the **C**Lever
-**A**udio **P**lugin standard. It is needless to say that without his
-initiative and the clear vision he followed, none of this would ever be
-possible. He constantly provided me with new ideas, listening to mine and
-helping me tremendously to shape the vision for this project. Thanks for helping a
-fellow enthusiasts throughout this project.
+landscape. He works at Bitwig and he is the inventor and lead developer behind
+the **C**Lever **A**udio **P**lugin standard. It is needless to say that
+without his initiative and the clear vision he followed, none of this would
+ever be possible. He constantly provided me with new ideas, listening to mine
+and helping me tremendously to shape the vision for this project. Thanks for
+helping a fellow enthusiasts throughout this project.
 
 I also want to thank some outstanding colleques in this regards. First of all
 thanks to *Tor Arne Vestbø*. We initially experimented on this topic during a

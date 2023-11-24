@@ -1,6 +1,6 @@
-# Chapter 3: Remote Plugin Development
+# Chapter 4: Remote Plugin Development
 
-## 3.1 Overview
+## 4.1 Overview
 
 This section transitions from defining the problem and introducing the
 necessary foundation to detailing our primary objective: enabling a seamless
@@ -85,7 +85,7 @@ techniques:
 Utilizing these methods in conjunction with QtGrpc has proven successful,
 delivering a reliable, fast, and native experience on desktop platforms.
 
-## 3.2 Remote Control Interface
+## 4.2 Remote Control Interface
 
 In this section, we explore the development of the Remote Control Interface
 (RCI) for CLAP. This interface is designed as a thin overlay on top of the CLAP
@@ -145,7 +145,7 @@ facilitated through the HTTP/2 protocol of gRPC. This structure enables the
 client implementation to support a diverse range of languages while providing
 independent and robust interference with the plugin's backend.
 
-### 3.2.1 Server Implementation
+### 4.2.1 Server Implementation
 
 When designing IPC mechanisms, there are two primary interaction styles:
 synchronous and asynchronous. Synchronous communication is characterized as a
@@ -423,7 +423,7 @@ operating in the completion queues and the potential simultaneous connection of
 several plugins and clients. This necessitates a development and debugging
 approach that is both structured and effective.
 
-### 3.3.2 Event Handling and Communication
+### 4.3.2 Event Handling and Communication
 
 Handling and distributing events is a critical and complex part of this
 library. It's essential to process events quickly while adhering to real-time
@@ -468,17 +468,6 @@ client channel communication. Our task involves enqueuing custom operations
 into the completion queue, which then manages their lifecycle and scheduling.
 Fortuitously, the gRPC library provides a suitable, albeit lesser-known,
 feature for this purpose: the `Alarm` class.
-
-Implementing the event polling mechanism is crucial for this system to function
-effectively. To avoid creating another independent thread for this purpose, and
-to sidestep the complexities associated with thread switching and
-synchronization, I chose to utilize the existing completion queues. These
-queues are already active and managed by internal thread pools. Importantly,
-they have the capability to interact with client channels. The strategy
-involves enqueuing custom operations into the completion queue, which then
-oversees their lifecycle and schedules subsequent invocations. Fortuitously,
-the gRPC library offers a particularly useful, though less commonly known, tool
-for this purpose: the `Alarm` class.
 
 Implementing the event polling mechanism is crucial for this system to function
 effectively. To avoid creating another independent thread for this purpose, and
@@ -730,7 +719,7 @@ through every connected stream (the `ServerEventStream`s), and attempts to
 forward the events. Once this process is successfully executed, the next
 callback is arranged at the usual polling rate.
 
-### 3.2.3 CLAP API Abstraction
+### 4.2.3 CLAP API Abstraction
 
 The previous section has already illustrated the server's structure and the
 interaction among its core components. This section delves into the integration
@@ -762,21 +751,7 @@ process callback operates, waiting for client feedback is not practical.
 Nevertheless, certain situations necessitate waiting for client responses. A
 notable instance is the implementation of the GUI extension. In this setup, the
 GUI operates as an independent process, leading to extra synchronization
-complexities. The approach to manage this includes:-
-
-For client GUI communication, two distinct channels are utilized. The first is
-a non-blocking channel, crucial for time-sensitive interactions. In this
-channel, events are dispatched in a UDP^[User Datagram Protocol] style,
-embracing a *fire and forget* method. Since immediate client receipt of the
-message is not critical, this approach is adopted. The events, stemming from
-the host's process callback, provide a real-time snapshot of their values.
-Given their frequent updates and the high frequency of the process callback,
-it's impractical to wait for a client's response.
-
-However, there are scenarios where awaiting client feedback is necessary. This
-is particularly true for the GUI extension. In this setup, the GUI operates as
-an independent process, leading to extra synchronization complexities. The
-approach to manage this includes:
+complexities. The approach to manage this includes:
 
 1. Providing the hashed ID of the plugin instance and the server address to the
    GUI.
@@ -987,7 +962,7 @@ adeptly handled by the underlying server-library. This allows the plugin
 developer to focus on the plugin's functionality without delving into the
 intricate details of event management and server communication.
 
-### 3.2.4 Server API
+### 4.2.4 Server API
 
 The library discussed thus far lays the groundwork for users to develop their
 projects. To fully leverage this library, users need a client that implements

@@ -2,7 +2,7 @@
 lang: en-US
 keyword: [CLAP, Qt, gRPC, Audio Plugin, Remote GUI]
 
-title: Remote Audio-Plugin Development
+title: Headless Audio-Plugin Development
 subtitle: Integrating CLAP and Qt for Enhanced Development Solutions
 author: Dennis Oberst
 date: 04 December 2023
