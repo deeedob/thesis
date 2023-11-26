@@ -18,7 +18,7 @@ continuity, preferring not to re-acquaint themselves with a subject solely due
 to the limitations of their chosen toolkit for the next project.
 
 Therefore, Qt, a cross-platform framework for crafting GUIs, comes to mind when
-considering the development of an audio plugin UI^[User Interface] intended
+considering the development of an audio plugin User Interface (UI hereon) intended
 for widespread platform compatibility. The expertise gained from utilizing the
 Qt framework is versatile, suitable for crafting mobile, desktop, or even
 embedded applications without relearning syntax or structure. As one of Qt's
@@ -26,8 +26,8 @@ mottos aptly states:
 
 > Code once, deploy everywhere.
 
-The significance of this subject becomes evident when browsing the forum
-"kvraudio.com", a renowned platform for audio-related discussions.
+The significance of this subject becomes evident when browsing
+"kvraudio", a renowned platform for audio-related discussions.
 
 A brief search of: `"Qt" "Plugin" :site www.kvraudio.com`
 
@@ -84,7 +84,7 @@ Static objects offer global accessibility and can enhance application design by
 allowing for the initialization of crucial objects just once, with the
 capability to share them throughout the entire codebase. However, this approach
 has its trade-offs, especially in terms of integration and operation in
-multi-threaded environments. This is evident in the case of QApplication
+multi-threaded environments. This is evident in the case of `QApplication`
 variants like QCoreApplication and QGuiApplication. These classes, which manage
 Qt's event loop through `Q*Application::exec()`, are static:
 
@@ -93,12 +93,12 @@ Qt's event loop through `Q*Application::exec()`, are static:
 static QCoreApplication *self;
 ```
 
-This design choice means only one QApplication can exist within a process.
+This design choice means only one `QApplication` can exist within a process.
 Issues arise when a plugin-loading-host, as
-[QTractor](https://github.com/rncbc/qtractor/blob/0e987e6c41796a4cbe85e499ae890b5989be8b82/src/qtractor.h#L60),
-already utilizes a QApplication object or when multiple plugin instances
+QTractor^[https://github.com/rncbc/qtractor/blob/0e987e6c41796a4cbe85e499ae890b5989be8b82/src/qtractor.h#L60],
+already utilizes a `QApplication` object or when multiple plugin instances
 operate within a single process. At first glance, one might assume the ability
-to verify the presence of a QApplication within the process and then
+to verify the presence of a `QApplication` within the process and then
 conveniently reuse its event loop:
 
 ```c++
@@ -115,7 +115,7 @@ window->setParent(QWindow::fromWinId(WId(hostWindow)));
 Attempting to reuse the event system of a parent window, while occasionally
 effective, is fraught with uncertainties. A primary limitation is that this
 approach is not consistently supported across different platforms. For instance
-on Linux, where event systems such as **xcb** and **glib** are not
+on Linux, where event systems such as **xcb**^[https://xcb.freedesktop.org/] and **glib**^[https://docs.gtk.org/glib/] are not
 standardized would render this method impractical. Additionally, there are risks
 associated with connecting to an event loop from an outdated version, which
 could lead to compatibility issues and impaired functionality.
@@ -136,10 +136,9 @@ system. This strategy is designed to offer a development process that is
 inherently aligned with Qt's principles, making it more intuitive for
 developers and ensuring a robust, platform-independent solution.
 
-The research primarily focuses on the CLAP plugin standard. CLAP is chosen
+The research primarily focuses on the CLAP^[https://cleveraudio.org/] plugin standard. CLAP is chosen
 for its innovative capabilities and its relevance in the context of current
 technology trends. This standard is viewed as the most suitable for the
 intended integration tasks. The usage of CLAP emphasizes the study's aim to
 tackle the intricate challenges of integrating Qt's comprehensive GUI framework
 with the dynamic field of audio plugins.
-
