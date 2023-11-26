@@ -5,7 +5,7 @@ of audio plugin development. Given the focused scope of this thesis, attention
 is centered on the most relevant aspects, particularly the use of inter-process
 communication in the remote control of plugins.
 
-## Clap-Plugins
+## 3.1 Clap-Plugins
 
 The project most directly related to this thesis comes from the CLAP team. In
 the official repository of the *free-audio* organization, which is the home of
@@ -115,7 +115,7 @@ method is executed. This call links to the
 ensuring that the GUI window is displayed in response to the event from the
 host application.
 
-## Sushi
+## 3.2 Sushi
 
 Another project employing a technical specification akin to the one detailed in
 this research is [Sushi](https://github.com/elk-audio/sushi). Its description

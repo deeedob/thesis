@@ -1,4 +1,4 @@
-# Headless Audio Plugins
+# Remote Audio Plugin Development
 
 ## Integrating CLAP and Qt for Enhanced Development Solutions
 

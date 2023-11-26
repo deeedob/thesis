@@ -1,6 +1,6 @@
 # Chapter 5: Conclusions
 
-## Event System Performance Analysis
+## 5.1 Event System Performance Analysis
 
 This section focuses on evaluating the performance of the CLAP-RCI event
 system. A series of tests were conducted to simulate a high volume of events
@@ -154,7 +154,7 @@ per stream with a throughput of approximately 1300 Mbps or 1.3 Gbps. Beyond
 this point, the throughput stabilizes, suggesting an optimal message count for
 efficient processing.
 
-## Final Words on Development Experiences
+## 5.2 Final Words on Development Experiences
 
 The development of the CLAP-RCI library and its client-side Qt implementation
 has proven successful in facilitating efficient communication between the

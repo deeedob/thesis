@@ -2,10 +2,22 @@
 lang: en-US
 keyword: [CLAP, Qt, gRPC, Headless, Audio Plugins, Remote GUI]
 
-title: Remote Audio-Plugin Development
-subtitle: Integrating CLAP and Qt for Enhanced Development Solutions
+university: Cologne University of Applied Science
+department: Department of Media Technology
+
+type: Bachelor Thesis
 author: Dennis Oberst
+
+title: Remote Audio-Plugin Development
+subtitle: Integrating Qt and CLAP for Enhanced Development Solutions
+
+first-examiner: Prof. Dr. Arnulph Fuhrmann
+second-examiner: Dr.
+
 date: 04 December 2023
+
+csl: resources/springer.csl
+bibliography: content/bibliography.bib
 
 abstract: |
   The Qt framework is well-established in the domain of cross-platform
@@ -22,14 +34,13 @@ abstract: |
   points to a flexible, scalable approach, suitable for modern software
   design.
 
-  This work presents a novel approach to audio plugin development that
-  leverages the combined strengths of Qt, CLAP, and gRPC. The resulting libraries
-  not only provide a consistent and adaptable user experience across various
-  operating systems but also simplifies the plugin creation process. This work
-  stands as a testament to the untapped potential of Qt in the audio-plugin
-  industry, paving the way for advancements in audio plugin creation that
-  enhance both user engagement and developer workflow.
-
-csl: resources/springer.csl
-bibliography: content/bibliography.bib
+  This thesis introduces a novel approach to audio plugin development that
+  leverages the combined strengths of Qt, CLAP, and gRPC. The developed libraries
+  offer a uniform and adaptable user experience across diverse operating systems
+  and streamline the process of plugin creation. This research addresses
+  long-standing challenges in integrating Qt within audio plugin environments,
+  effectively overcoming barriers that have hindered this integration in the
+  past. This work stands as a testament to the untapped potential of Qt in the
+  domain of audio plugins, paving the way for advancements in audio plugin
+  creation that enhance both user engagement and developer workflow.
 ---

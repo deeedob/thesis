@@ -33,6 +33,9 @@ $if(background-image)$
 \usebackgroundtemplate{%
   \includegraphics[width=\paperwidth]{$background-image$}%
 }
+
+\usepackage{geometry} % Add the geometry package
+\usepackage{sectsty}
 % In beamer background-image does not work well when other images are used, so this is the workaround
 \pgfdeclareimage[width=\paperwidth,height=\paperheight]{background}{$background-image$}
 \usebackgroundtemplate{\pgfuseimage{background}}
@@ -479,39 +482,54 @@ $endif$
 
 \begin{document}
 $if(has-frontmatter)$
-    \frontmatter
+\frontmatter
 $endif$
 $if(title)$
-    $if(beamer)$
-        \frame{\titlepage}
-    $else$
-        %\maketitle
-    \begin{center}
-        \LARGE
-        {\bfseries University of Water World\par}
-        School of Atlantis\par
-        \vspace{4cm}
-        {\huge\bfseries Jellyfish -- Who needs them?\par}
-        {\small Seriously}
-        \vspace{3cm}
-        \par
-    \end{center}
-    \hfill\begin{minipage}{.5\linewidth}
-        \normalsize
-        a funny thesis paper brought to you by\par
-        \textsc{Carlos Pilkerton}\par
-        Enjoy reading
-    \end{minipage}
-    \vfill
+$if(beamer)$
+\frame{\titlepage}
+$else$
 
+% Custom Title Page
+\begin{titlepage}
     \centering
-    \today
-    $endif$
-    $if(abstract)$
-        \begin{abstract}
-        $abstract$
-        \end{abstract}
-    $endif$
+    \vspace*{\fill}
+
+    % Your custom title, subtitle, and author information
+    {\LARGE \textbf{$title$} \par}
+    \vspace{0.5cm}
+    {\large $subtitle$ \par}
+    \vspace{2.5cm}
+    {\Large \textbf{A thesis submitted to attain the degree of}\par}
+    {\Large \textbf{BACHELOR OF SCIENCES (B. Sc.)}\par}
+    \vspace{0.5cm}
+    {\Large \textbf{Author:} $author$ \par}
+    \vspace{0.5cm}
+    {\Large \textbf{University:} $university$ \par}
+    \vspace{0.5cm}
+    {\Large \textbf{Department:} $department$ \par}
+    \vspace{0.5cm}
+    {\Large \textbf{First Examiner:} $first-examiner$ \par}
+    \vspace{0.5cm}
+    {\Large \textbf{Second Examiner:} $second-examiner$ \par}
+    \vspace{1.5cm}
+    {\Large \textbf{Date:} $date$ \par}
+
+    \vspace*{\fill}
+\end{titlepage}
+
+
+$endif$
+
+$if(abstract)$
+\newgeometry{inner=45mm, outer=45mm, top=45mm, bottom=45mm} % Adjust width and height as needed
+\sectionfont{\large}  % Set section (abstract) font size to "large"
+\begin{abstract}
+$abstract$
+\end{abstract}
+% Restore the original page dimensions after the abstract page
+\restoregeometry
+
+$endif$
 $endif$
 
 $for(include-before)$
