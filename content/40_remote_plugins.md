@@ -1,4 +1,4 @@
-# Chapter 4: Remote Plugin Development
+# Chapter 4: Remote Audio Plugin Development
 
 ## 4.1 Overview
 
@@ -6,7 +6,12 @@ This section transitions from defining the problem and introducing the
 necessary foundation to detailing our primary objective: enabling a seamless
 native development experience. This is achieved by moving away from rigid
 methods, such as the requirement for users to compile Qt in a separate
-namespace. Additionally, ensuring stabillity across all desktop platforms is a
+namespace. We will expand on the concept of "headless" audio plugins, as
+mentioned in the previous section, "headless" refers to software designed to
+operate without a GUI (the missing head). For this part of the project, this
+implies a focus on backend processing. We move away from the traditional
+architecture of plugins and relay their communication and interaction through a
+specialized server. Ensuring stabillity across all desktop platforms is a
 critical requirement.
 
 ![Overview of Traditional Plugin Architecture](images/plugins_traditional.png){#fig:plug_tradition}
@@ -19,9 +24,6 @@ event loop within a distinct thread, typically resulting in at least two
 threads operating within the DSO's process. This method is evident in
 [JUCE](https://juce.com/), a renowned library for creating agnostic plugins,
 and is also employed in various open-source projects.
-
-The traditional method of starting Qt's event loop in a distinct thread presents
-significant challenges.
 
 Starting Qt's event loop within a dedicated thread presents significant
 challenges. To address these, we opted to run the plugin's GUI in
@@ -65,10 +67,10 @@ encapsulated in the critical flicker fusion rate:
 > varies with intensity and contrast, with the fastest variation in luminance one
 > can detect at 50–90 Hz
 
-Recent research suggests that humans can detect flickering up to 500 Hz [@flicker]
-Nature study). Standard desktop monitor refresh rates vary from 60 to 240 Hz,
-corresponding to *16 to 4.1 ms*. This range sets the minimum communication speed
-our application should aim for to ensure a seamless user experience.
+Recent research suggests that humans can detect flickering up to 500 Hz
+[@flicker]. Standard desktop monitor refresh rates vary from 60 to 240 Hz,
+corresponding to *16 to 4.1 ms*. This range sets the minimum communication
+speed an application should aim for to ensure a seamless user experience.
 
 To integrate Qt GUIs into the CLAP standard, we will employ the following
 techniques:
@@ -423,7 +425,7 @@ operating in the completion queues and the potential simultaneous connection of
 several plugins and clients. This necessitates a development and debugging
 approach that is both structured and effective.
 
-### 4.3.2 Event Handling and Communication
+### 4.3.2 Event-System
 
 Handling and distributing events is a critical and complex part of this
 library. It's essential to process events quickly while adhering to real-time
@@ -438,9 +440,8 @@ closing a channel, along with `Read` and `Write` methods. These are the
 essential vehicles to receive and transmit messages. However, the complexity
 arises with the asynchronous API, where these calls must be manually enqueued
 into the completion queues. This restricts the ability to call them directly
-from the plugin multiple times for client communication. Instead, they must be
-enqueued with a tag and await processing by the completion queue before another
-can be queued.
+from the plugin for client communication. Instead, they must be enqueued with a
+tag and await processing by the completion queue before another can be queued.
 
 > Note: Completion Queues can only have one pending operation per tag.
 

@@ -80,7 +80,7 @@ plugins like [protoc-gen-doc](https://github.com/pseudomuto/protoc-gen-doc)
 extend the capability of `protoc` by offering the convenience of producing
 documentation directly from inline comments within the proto file.
 
-![protoc extensions](images/protobuf_protoc.png)
+![protoc extensions](images/protobuf_protoc.png){ width=77% }
 
 For instance, to compile the protobuf file into a Python interface, use:
 

@@ -1,6 +1,6 @@
-# Audio Plugin Development with QtGrpc
+# Headless Audio Plugins
 
-## A Journey Into Remote GUIs
+## Integrating CLAP and Qt for Enhanced Development Solutions
 
 author: Dennis Oberst
 

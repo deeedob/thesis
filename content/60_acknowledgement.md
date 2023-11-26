@@ -1,75 +1,69 @@
 # Chapter 6: Acknowledgements
 
-At this point, I want to thank everyone involved within this project.
-The timespan of this research predated the begin of this thesis. Initially
-thought of a simple "Proof of Concept" implementation, over time grew
-in complexity and in the end even suprised me. I was on to something and I
-could feel the growing potential of this work. I wanted to get this right.
+I would like to express my deepest gratitude to all those who have been a part
+of this project. The journey of this research, which started even before this
+thesis, initially emerged as a "Proof of Concept." Over time, it transformed
+into a remarkably intricate and surprisingly fulfilling endeavor.
 
-> Every small thing holds the potential to grow beyond expectations.
+> "In every small detail lies the possibility to exceed beyond what we imagine."
 
-With this, I want to greatly thank *The Qt Company*, without their trust in my
-idea and the flexibillity they provided, the countless hours i've spent during
-my work-time into investing these problems and researching topics. While always
-staying supportive in all regards, this project would *never happened in this
-way!*
+I am immensely grateful to *The Qt Company*. Their trust and the flexibility
+they offered were crucial for this project. The countless hours I devoted to
+tackling these challenges and exploring various topics during my work time were
+made possible because of their constant support. This project would not have
+been possible in its current form without their backing.
 
-Additionally I also want to thank the *Cologne University of Applied Sciences*,
-and especially *Prof. Dr. Arnulph Fuhrmann*, for providing the boundary conditions
-for me to unfold my vision and giving me the freedom to choose my own path
-throughout the time of this research. His constructive critic in the various
-meetings we had, coupled with his flexibillity to adapt upon the constant change
-in directions in the beginning phase shaped the growth of this research.
+My sincere thanks also go to the *Cologne University of Applied Sciences*,
+particularly *Prof. Dr. Arnulph Fuhrmann*. His guidance allowed me to navigate my
+research path freely, adapting to the evolving directions of the study. His
+insightful feedback in our discussions greatly contributed to the progress of
+this research.
 
-A special thanks goes to *Dr. Cristián Maureira-Fredes*. He initially welcomed
-me to the Qt Company, supervised me through the internship, and then continued
-to provide a constantly supportive environment for me. He's been a patient
-audience to a lot of so called "ideas" (read: crazy thoughts) of mine. I
-remember that one of the first conversations we had, whilst visiting the Qt
-office in Berlin, was about this exact research topic. Something along the
-lines of:
+A special thanks goes to *Dr. Cristián Maureira-Fredes*. He played an
+instrumental role in introducing me to the Qt Company and mentored me
+throughout my internship, consistently cherishing a supportive environment. His
+patience on my various "ideas" (read: crazy thoughts) was invaluable. He helped
+mold these ideas, which otherwise might have remained mere thoughts. I recall
+one of our initial discussions at the Qt office in Berlin, revolving around
+this very topic of research:
 
 > How come, that Qt user interfaces are not available for audio plugins? It
 > would be such a good fit.
 
-His response was something like: "Well, perhaps **you** have to implement it.
-At the end it's in the open". And here we are. I'm very gratefull
-for your trust, the constant help you provided by reviewing my documents or
-enlighten me with your knowledge. Your mentoring is exceptional, and I greatly
-appreciated and benefitted from that.
+His response was encouraging: "Perhaps it's up to **you** to make it happen.
+It's all there for the taking." And here we are. I am truly grateful for his
+trust and the constant assistance he provided, whether through reviewing my
+documents or enlightening me with his knowledge. His mentorship has been
+extraordinary, and I am immensely thankful for it.
 
-Furthermore I want to give a special thanks to *Alexandre Bique*. We initially
-met on the SUPERBOOTH23, where I approached him and we quickly got into
-discussions about plugins, GUIs and the desiring need to improve that
-landscape. He works at Bitwig and he is the inventor and lead developer behind
-the **C**Lever **A**udio **P**lugin standard. It is needless to say that
-without his initiative and the clear vision he followed, none of this would
-ever be possible. He constantly provided me with new ideas, listening to mine
-and helping me tremendously to shape the vision for this project. Thanks for
-helping a fellow enthusiasts throughout this project.
+I also want to express special gratitude to *Alexandre Bique*. Our paths
+crossed at SUPERBOOTH23, where our conversation quickly evolved into in-depth
+discussions about plugins, GUIs, and how we imagined the future of them.
+Alexandre's work at Bitwig, particularly as the inventor and lead developer of
+the **C**Lever **A**udio **P**lugin standard, has been pivotal. He consistently
+provided a flow of new ideas, was receptive to mine, and provided significant
+guidance that helped shape this project. I am truly thankful for his support
+and collaboration in this journey.
 
-I also want to thank some outstanding colleques in this regards. First of all
-thanks to *Tor Arne Vestbø*. We initially experimented on this topic during a
-hackathon at Qt. This was where the foundation of this research emerged and the
-core problems where identified. I greatly appreciated your input on this topic.
+I also wish to acknowledge several colleagues for their remarkable support.
+*Tor Arne Vestbø's* input during our initial exploration of this topic at a Qt
+hackathon laid the groundwork for this research. *Ivan Solovev's* assistance in
+navigating complex C++ concepts and his invaluable feedback on my ideas were
+pivotal in refining this project. *Marc Mutz's* extensive knowledge and
+insightful discussions greatly accelerated my learning and understanding of
+various technologies. Additionally, *Fabian Kosmale's* expertise in the
+intricate workings of Qt's event system, his answers to my numerous queries,
+and his recommendation of QtGrpc as the backbone for this research were
+immensely helpful.
 
-Furthermore I want to thank *Ivan Solovev*. He helped me to understand some
-complex C++ topics and always found the time to listen to my ideas - critically
-reviewing them and entering deep and thoughtfull conversations about them.
-Those ideas where sometimes very rough and even turned out to be outright
-stupid. Nevertheless, you continued to help me. I really appreciated your
-critical view and the honest opinion you provided. This is worth a lot.
+Finally, I extend my heartfelt gratitude to the QtGrpc team, especially to
+*Tatiana Borisova* and *Alexey Edelev*. They are the inventors of QtGrpc and Qt
+Protobuf, and key figures in their ongoing development and maintenance.
+Throughout the research process, their guidance was pivotal in steering the
+project towards success. Their profound knowledge in these fields continuously
+inspired and supported me.
 
-*Marc Mutz* was similarly indispensable, a presence impossible to ignore. The
-*raison d'être* for my rapid progress in exploring and evaluating technologies
-was due to his exceptionally deep knowledge in what seemed to me an endless
-array of topics. I feel honored that you took the time to listen to the various
-topics I casually introduced, and I am deeply impressed by the quality and
-depth of the responses I received.
-
-Lastly, I want to thank the QtGrpc team, with *Tatiana Borisova* and *Alexey
-Edelev* at the forefront. They are the initiatiors behind QtGrpc and
-QtProtobuf. They welcomed me with open arms, guided me throughout the first
-contributions and always where supportive with their extensive knowledge in
-that field, be it for features to implement, ideas to evaluate, or help required
-for this research.
+I consider myself extremely lucky to have worked alongside such an amazing and
+talented group of people. This project has thrived on the valuable feedback and
+guidance provided by the world's leading experts in this area of research,
+profoundly shaping and enriching its evolution.

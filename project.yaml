@@ -29,10 +29,10 @@ variables:
   geometry:
     - a4paper
     - bindingoffset=0mm
-    - inner=30mm
-    - outer=30mm
-    - top=30mm
-    - bottom=30mm
+    - inner=15mm
+    - outer=15mm
+    - top=15mm
+    - bottom=15mm
   linestretch: 1.25
   color-links: true
   link-citations: true
@@ -54,9 +54,9 @@ variables:
   figureTitle: Figure
   figPrefix: Figure
   graphics: yes
-  fontsize: 13
-  mainfont: TitilliumWeb
+  fontsize: 12
   listings-no-page-break: true
+  mainfont: Literata
   mainfontoptions:
     - Path = ./resources/fonts/main/
     - Extension = .ttf,
