@@ -3,15 +3,10 @@
 ## 4.1 Overview
 
 This section transitions from defining the problem and introducing the
-necessary foundation to detailing our primary objective: enabling a seamless
+necessary foundation to detail our primary objective: enabling a seamless
 native development experience. This is achieved by moving away from rigid
 methods, such as the requirement for users to compile Qt in a separate
-namespace. We will expand on the concept of "headless" audio plugins, as
-mentioned in the previous section, "headless" refers to software designed to
-operate without a GUI (the missing head). For this part of the project, this
-implies a focus on backend processing. We move away from the traditional
-architecture of plugins and relay their communication and interaction through a
-specialized gRPC API. Ensuring stabillity across all desktop platforms is a
+namespace. Additionally, ensuring stability across all desktop platforms is a
 critical requirement.
 
 ![Overview of Traditional Plugin Architecture](images/plugins_traditional.png){#fig:plug_tradition}
@@ -22,14 +17,14 @@ instances are generated from our Dynamic Shared Object (DSO), hence enforcing
 reentrancy. The traditional approach involves initiating the user interface's
 event loop within a distinct thread, typically resulting in at least two
 threads operating within the DSO's process. This method is evident in
-[JUCE](https://juce.com/), a renowned library for creating agnostic plugins,
+JUCE^[https://juce.com/], a renowned library for creating agnostic plugins,
 and is also employed in various open-source projects.
 
 Starting Qt's event loop within a dedicated thread presents significant
 challenges. To address these, we opted to run the plugin's GUI in
 an entirely separate process. While this might initially seem
-resource-intensive or complex, especially given the intricacies of IPC^[Inter
-Process Communication], the experimental findings have confirmed the
+resource-intensive or complex, especially given the intricacies of Inter
+Process Communication (IPC), the experimental findings have confirmed the
 effectiveness and feasibility of this approach.
 
 With modern computers capable of efficiently handling an additional process,
@@ -84,7 +79,7 @@ techniques:
 5. Optionally, enable the client to request specific functionalities from the
    host.
 
-Utilizing these methods in conjunction with QtGrpc has proven successful,
+Utilizing these methods in conjunction with QtGrpc^[FIXME: Missing reference] has proven successful,
 delivering a reliable, fast, and native experience on desktop platforms.
 
 ## 4.2 Remote Control Interface
@@ -124,11 +119,11 @@ implementation are as follows:
 By avoiding the use of Qt's event system, we gain greater flexibility and
 overcome various integration challenges. At this stage, this approach appears
 to be the most flexible, performant, and stable solution. The adoption of gRPC
-leverages the language-independent features of protobufs IDL, allowing clients
+leverages the language-independent features of protobuf's IDL, allowing clients
 the freedom to implement the server-provided API in any desired manner. The
 server's primary role is to efficiently manage event traffic to and from its
 clients. This opens up possibilities such as controlling plugins through
-the CLI^[Command Line Interface] or embedded devices, as long as they support gRPC and
+the Command Line Interface (CLI) or embedded devices, as long as they support gRPC and
 have a client implementation for the API. Additionally, we can statically link
 all dependencies against our library target, enhancing portability. This aspect
 of portability is vital, particularly in the realm of plugins, which often
@@ -173,7 +168,7 @@ The gRPC C++ library offers three distinct approaches for server creation:
    implementation, with the client call waiting for the server's response.
 2. **Callback API**: This serves as an abstraction over the asynchronous API,
    offering a more accessible solution to its complexities. This approach was
-   introduced in the proposal [L67-cpppcallback-api](https://github.com/grpc/proposal/blob/master/L67-cpp-callback-api.md).
+   introduced in the proposal L67-cpppcallback-api^[https://github.com/grpc/proposal/blob/master/L67-cpp-callback-api.md].
 3. **Asynchronous API**: The most complex yet highly flexible method for
    creating and managing RPC calls. It allows complete control over the
    threading model but at the cost of a more intricate implementation. For
@@ -187,7 +182,7 @@ library's design. The following illustrates the code flow we will employ:
 
 ![Lifetime of CLAP-RCI](images/clap-rci_sequence_diag.svg){#fig:claprcilifetime}
 
-*@fig:claprcilifetime*, outlines the server's lifecycle. The process begins
+*@fig:claprcilifetime*, outlines the server's life-cycle. The process begins
 with the creation of the first plugin, triggering the static server controller
 to initiate and start the server. When a plugin instance launches its GUI, it
 is provided with necessary command line arguments, such as the server's address
@@ -206,7 +201,7 @@ unloaded.
 
 To accurately identify or 'register' each plugin instance within the context of
 the static server handler, we employ a hashing algorithm known as
-[MurmurHash](https://en.wikipedia.org/wiki/MurmurHash). This step is crucial
+MurmurHash^[https://en.wikipedia.org/wiki/MurmurHash]. This step is crucial
 for ensuring that each GUI connecting to the server can be correctly mapped to
 its corresponding plugin instance. The generated hash value is used both as a
 command line argument when launching the GUI and as the key for inserting the
@@ -264,7 +259,7 @@ public:
 }
 ```
 
-In the upcoming code snippet, we will explore the constructor of the
+In the upcoming code snippet, we explore the constructor of the
 `CorePlugin` class. This constructor is fundamental, establishing the essential
 framework upon which the class operates. As a cornerstone of our architecture,
 the *CorePlugin* class stands at the forefront, acting as the primary interface
@@ -337,7 +332,7 @@ Three distinct *rpc-tag* handlers are employed:
    parameter adjustments.
 
 This distinction between call types is crucial. Parameter calls from the client
-are directly forwarded to the realtime audio thread. In contrast, event calls,
+are directly forwarded to the real-time audio thread. In contrast, event calls,
 which can be blocking, do not require real-time handling. Instead, they are
 used for critical events that necessitate client verification during the GUI
 creation process.
@@ -394,7 +389,7 @@ void ServerEventStream::process(bool ok)
                     "Couldn't authenticate client" }, toTag(this));
                 return;
             }
-            sharedData->tryStartPolling()) {
+            sharedData->tryStartPolling()) { // FIXME: this line looksbroken
                 SPDLOG_INFO("Already polling events!");
             }
             state = WRITE;
@@ -460,15 +455,29 @@ the server, obtaining a handle to the `SharedData` object. Events are then
 pushed into FIFO queues within SharedData, and the server automatically manages
 everything thereafter.
 
-To enable this, it's necessary to implement an event polling mechanism. I opted
-not to introduce a separate thread for this task, aiming to avoid the
-complexities of thread switching and synchronization issues. Instead, I
-repurposed the existing completion queues. These queues are already operational
+> FIXME: These three paragraph seems to related/repeated
+
+To enable this, it's necessary to implement an event polling mechanism. The
+decision for this work was not to introduce a separate thread for this task, aiming to avoid the
+complexities of thread switching and synchronization issues. Instead, the
+existing completion queues were repurposed.
+These queues are already operational
 and maintain internal thread pools, additionally offering capabilities for
 client channel communication. Our task involves enqueuing custom operations
 into the completion queue, which then manages their lifecycle and scheduling.
 Fortuitously, the gRPC library provides a suitable, albeit lesser-known,
 feature for this purpose: the `Alarm` class.
+
+Implementing the event polling mechanism is crucial for this system to function
+effectively. To avoid creating another independent thread for this purpose, and
+to sidestep the complexities associated with thread switching and
+synchronization, the existing completion queues were utilized. These
+queues are already active and managed by internal thread pools. Importantly,
+they have the capability to interact with client channels. The strategy
+involves enqueuing custom operations into the completion queue, which then
+oversees their lifecycle and schedules subsequent invocations. Fortuitously,
+the gRPC library offers a particularly useful, though less commonly known, tool
+for this purpose: the `Alarm` class.
 
 Implementing the event polling mechanism is crucial for this system to function
 effectively. To avoid creating another independent thread for this purpose, and
@@ -663,7 +672,7 @@ callback with a progressively increasing exponential backoff. This technique is
 employed to minimize the server's CPU consumption during its hiatus in event
 activity, thereby enhancing overall efficiency.
 
-![Exponentiall Backoff](images/clap-rci_exp_backoff.png){#fig:expbackoff}
+![Exponential Backoff](images/clap-rci_exp_backoff.png){#fig:expbackoff}
 
 *@fig:expbackoff* illustrates the exponential backoff curve employed to
 determine the interval before the next event check. The curve is segmented into
@@ -688,7 +697,7 @@ system, triggering frequent events that require quick server responses. Once
 user interaction drops off and plugins are not in use, the system seamlessly
 shifts into **stand-by** mode to optimize efficiency.
 
-![Exponentiall Backoff Server Trace](images/clap-rci_exp_backoff_trace.png){#fig:expbackofftrace}
+![Exponential Backoff Server Trace](images/clap-rci_exp_backoff_trace.png){#fig:expbackofftrace}
 
 *@fig:expbackofftrace* captures this dynamic behavior. An additional trace
 message in the code helps accentuate the exponential backoff's response to
@@ -728,7 +737,7 @@ of the server with the CLAP API. Given our insights from the
 [CLAP](#the_clap_audio_plugin_standard) section, we're aware that the CLAP
 standard offers an extension-based interface that allows plugins to add their
 unique functionalities. The API abstraction utilizes the
-[clap-helpers](https://github.com/free-audio/clap-helpers) toolkit, provided by
+clap-helpers^[https://github.com/free-audio/clap-helpers] toolkit, provided by
 the CLAP team. This small library contains a range of utilities designed to ease the
 development processes. Among these is the `Plugin` class, which acts as an
 intermediary between the C-API and the plugin specific contexts. It functions as a
@@ -742,8 +751,8 @@ functionality.
 
 For client GUI interactions, two separate communication channels are
 established. The primary channel is non-blocking, designed for interactions
-where timing is critical. Here, events are sent using a UDP^[User Datagram
-Protocol]-inspired, *fire and forget* approach. This approach is practical
+where timing is critical. Here, events are sent using a User Datagram
+Protocol (UDP) inspired, *fire and forget* approach. This approach is practical
 because it doesn't require immediate confirmation of the client receiving the
 message. The events, generated from the host's process callback, reflect
 current values. Due to the frequent updates and the rapid pace at which the
@@ -752,7 +761,21 @@ process callback operates, waiting for client feedback is not practical.
 Nevertheless, certain situations necessitate waiting for client responses. A
 notable instance is the implementation of the GUI extension. In this setup, the
 GUI operates as an independent process, leading to extra synchronization
-complexities. The approach to manage this includes:
+complexities. The approach to manage this includes:-
+
+For client GUI communication, two distinct channels are utilized. The first is
+a non-blocking channel, crucial for time-sensitive interactions. In this
+channel, events are dispatched in a UDP style,
+embracing a *fire and forget* method. Since immediate client receipt of the
+message is not critical, this approach is adopted. The events, stemming from
+the host's process callback, provide a real-time snapshot of their values.
+Given their frequent updates and the high frequency of the process callback,
+it's impractical to wait for a client's response.
+
+However, there are scenarios where awaiting client feedback is necessary. This
+is particularly true for the GUI extension. In this setup, the GUI operates as
+an independent process, leading to extra synchronization complexities. The
+approach to manage this includes:
 
 1. Providing the hashed ID of the plugin instance and the server address to the
    GUI.
@@ -766,7 +789,7 @@ complexities. The approach to manage this includes:
 > to destroy the GUI after hiding it, while some other hosts may choose to
 > conceal the UI, keeping it active in the background.
 
-This variation in approach requires a versatile and robust GUI creation
+This variation approach requires a versatile and robust GUI creation
 mechanism. The public interface for these GUI-related functions is outlined as
 follows in:
 
@@ -936,10 +959,10 @@ void CorePlugin::processEvent(~~~) noexcept
     { ~~~ }
 ```
 
-Here, the focus is on efficiently enqueuing events as they are received from
+Here, the focus is on efficiently enqueueing events as they are received from
 the host. Each event is move-constructed into its respective wrapper class.
 These specialized wrapper classes are essential in ensuring that the integrity
-of the events is maintained, particularly focusing on the realtime requirements
+of the events is maintained, particularly focusing on the real-time requirements
 under which they operate in.
 
 ```cpp
@@ -1067,7 +1090,7 @@ In this definition, three distinct RPC methods are outlined:
 1. `ServerEventStream`: Serves as the primary communication channel from the
    plugin to its clients. Clients must initiate this stream to start receiving
    events.
-2. `ClientEventCall` and `ClientParamCall`: Function as unary calls from the
+2. `ClientEventCall` and `ClientParamCall`: Behaves as unary calls from the
    client, meaning they are executed once per message.
 
 Originally, due to QtGrpc supporting only unary calls and server streaming,
