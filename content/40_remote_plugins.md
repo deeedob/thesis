@@ -11,7 +11,7 @@ mentioned in the previous section, "headless" refers to software designed to
 operate without a GUI (the missing head). For this part of the project, this
 implies a focus on backend processing. We move away from the traditional
 architecture of plugins and relay their communication and interaction through a
-specialized server. Ensuring stabillity across all desktop platforms is a
+specialized gRPC API. Ensuring stabillity across all desktop platforms is a
 critical requirement.
 
 ![Overview of Traditional Plugin Architecture](images/plugins_traditional.png){#fig:plug_tradition}

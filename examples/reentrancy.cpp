@@ -1,28 +1,27 @@
 // reentrancy.cpp
 #include <iostream>
 
-void nonReentrantFunction() {
-    std::cout << "Non-Reentrant: ";
-    for (static int i = 0; i < 3; ++i)
-        std::cout << i << " ";
-    std::cout << std::endl;
+struct Plugin
+{
+    Plugin(int num) { std::cout << "Plugin " << num << " created." << std::endl; }
+};
+
+Plugin create_reentrant(int n) {
+    std::cout << "Reentrant Call " << n << ", ";
+    return Plugin(n);
 }
 
-void reentrantFunction() {
-    std::cout << "Reentrant: ";
-    for (int i = 0; i < 3; ++i)
-        std::cout << i << " ";
-    std::cout << std::endl;
+Plugin create_non_reentrant(int n) {
+    std::cout << "Non-Reentrant Call " << n << ", ";
+    static Plugin plugin(n);
+    return plugin;
 }
 
 int main() {
-    std::cout << "First call:" << std::endl;
-    nonReentrantFunction();
-    reentrantFunction();
-
-    std::cout << "\nSecond call:" << std::endl;
-    nonReentrantFunction();
-    reentrantFunction();
-
+    create_reentrant(1);
+    create_non_reentrant(1);
+    std::cout << std::endl;
+    create_reentrant(2);
+    create_non_reentrant(2);
     return 0;
 }

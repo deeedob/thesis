@@ -1,19 +1,19 @@
 ## 2.2 The CLAP Audio Plugin Standard
 
 Originating from the collaboration between Berlin-based companies Bitwig and
-u-he, CLAP (**CL**ever **A**udio **P**lugin) emerged as a new plugin standard. Born
-from developer Alexandre Bique's vision in 2014, it was revitalized in 2021
-with a focus on three core concepts: Simplicity, Clarity, and Robustness.
+u-he, CLAP (**CL**ever **A**udio **P**lugin) emerged as a new plugin standard.
+Born from developer Alexandre Bique's vision in 2014, it was revitalized in
+2021 with a focus on three core concepts: Simplicity, Clarity, and Robustness.
 
 CLAP stands out for its:
 
 - *Consistent API* and *flat architecture*, making plugin creation more
-intuitive.
+  intuitive.
 - *Adaptability*, allowing flexible integration of unique features like
-  per-voice modulation (MPE^[Midi Polyphonic Expression] on steroids) or
+  per-voice modulation (advanced MPE^[Midi Polyphonic Expression]) or
   a host thread-pool extension.
-- Open-source ethos, making the standard accessible under the [MIT
-  License](https://en.wikipedia.org/wiki/MIT_License).
+- Open-source ethos, making the standard accessible under the MIT
+  License^[https://en.wikipedia.org/wiki/MIT_License].
 
 CLAP establishes a stable and backward compatible Application Binary Interface.
 This ABI forms a bridge for communication between digital audio workstations
@@ -24,13 +24,13 @@ and audio plugins such as synthesizers and effect units.
 The principal advantage of CLAP is its simplicity. In contrast to other plugin
 standards, such as VST, which often involve complex structures including deep
 inheritance hierarchies that complicate both debugging and understanding the
-code, CLAP offers a refreshingly straightforward and flat architecture. With
-CLAP, a single exported symbol is the foundation from which the entire plugin
-functionality extends: the `clap_plugin_entry` type. This must be made
+code, CLAP offers a refreshingly straightforward flat architecture. With CLAP,
+a single exported symbol is the foundation from which the entire plugin
+functionality extends: the `clap_plugin_entry` type. This type must be made
 available by the DSO and is the only exported symbol.
 
 > Note: We will use the term *CLAP* to refer to the DSO that houses the plugin
-> implementation of the clap interface. This is a common phrase in the CLAP
+> implementation of the interface. This is a common phrase in the CLAP
 > community.
 
 ```cpp
@@ -51,11 +51,12 @@ Following this, there are three function pointers declared:
    to execute quickly.
 2. The de-initialization function `void deinit(void)` is invoked when the DSO
    is unloaded, which typically occurs after the final plugin instance is
-   closed.
-3. The `const void* get_factory(const char*)` serves as the "constructor" for
-   the plugin, tasked with creating new plugin instances. A notable aspect of
-   CLAP plugins is their containerized nature, allowing a single DSO to
-   encapsulate multiple distinct plugins.
+   unloaded by the host.
+3. The `const void* get_factory(const char*)` is tasked with creating new
+   plugin instances. A notable aspect of CLAP plugins is their containerized
+   nature, allowing a single DSO to encapsulate multiple distinct plugins.
+
+
 
 ```cpp
 typedef struct clap_plugin_factory {
@@ -72,7 +73,7 @@ typedef struct clap_plugin_factory {
 ```
 
 The plugin factory acts as a hub for creating plugin instances within a given
-CLAP object. The structure requires three function pointers:
+CLAP. The structure requires three function pointers:
 
 1. `get_plugin_count(~)` determines the number of distinct plugins available
    within the CLAP.
@@ -81,11 +82,10 @@ CLAP object. The structure requires three function pointers:
 3. `create_plugin(~)` is responsible for instantiating the plugin(s).
 
 At the heart of the communication between the host and a plugin is the
-`clap_plugin_t` type. It defines the essential functions that a host will invoke
-to control the plugin, such as initializing, processing audio, and handling
-events. It is through this interface that the plugin exposes its capabilities
-and responds to the host, thereby allowing for the dynamic and interactive
-processes required for audio manipulation and creation.
+`clap_plugin_t` type. It defines the essential functions that a host will
+invoke to control the plugin, such as initializing, processing audio, and
+handling events. It is through this interface that the plugin exposes its
+capabilities and responds to the host.
 
 ![CLAP factory](images/clap_factory.png){width=77%}
 
@@ -97,7 +97,7 @@ processing. A gain plugin's role is to control the output volume by adjusting
 the input signal's level in decibels. Accordingly, our plugin will manage the
 audio inputs and outputs and feature a single adjustable parameter: gain.
 
-Setting up our project is straightforward. We'll create a directory for our
+Setting up the project is straightforward. We'll create a directory for the
 plugin, obtain the CLAP library, and prepare the initial files:
 
 ```bash
@@ -225,15 +225,14 @@ const clap_plugin_factory pluginFactory = {
 };
 ```
 
-The `host` pointer serves as a means of communication from the plugin
-towards the host, requesting necessary services and functionality.
+The `host` pointer can be utilized to request functionality from the host.
 
 The implementation of our plugin in modern C++ requires a mechanism to interact
 with the C-API of the CLAP standard. Since the `clap_plugin_t` struct expects
-static function pointers and member functions are not static, we resolve this
-mismatch using *trampoline* functions, also known as *glue* routines. These
-functions connect the static world of the C-API with the instance-specific
-context of our C++ classes:
+static function pointers and member functions don't provide that, we resolve
+this mismatch using *trampoline* functions, also known as *glue* routines.
+These functions connect the static world of the C-API with the
+instance-specific context of our C++ classes:
 
 ```cpp
 MiniGain* MiniGain::self(const clap_plugin *plugin) {
@@ -254,14 +253,7 @@ void MiniGain::initializePlugin() {
     mPlugin.get_extension = [](const clap_plugin* p, const char* id) -> const void* {
         return nullptr; // TODO: Add extensions.
     };
-    // Simplified for brevity.
-    mPlugin.init = [](const auto*) { return true; };
-    mPlugin.activate = [](const auto*, double, uint32_t, uint32_t) { return true; };
-    mPlugin.deactivate = [](const auto*) {};
-    mPlugin.start_processing = [](const auto*) { return true; };
-    mPlugin.stop_processing = [](const auto*) {};
-    mPlugin.reset = [](const auto*) {};
-    mPlugin.on_main_thread = [](const auto*) {};
+    {~~~} // Simplified for brevity.
 }
 ```
 
@@ -328,14 +320,15 @@ minimalistic plugin structure is achieved in approximately 100 lines of code.
 This implementation of the MiniGain plugin is already sufficient for it to be
 recognized and loaded by CLAP-compatible hosts. At this stage, a developer
 might wonder about how to debug such a plugin, considering it operates as a
-shared library that has to be loaded and called.
+shared library that has to be loaded and called in accordance with the CLAP
+specification.
 
 ### 2.2.3 Debugging
 
 Debugging is a crucial step in software development. When the complexity of our
 program increases or even if we just want to verify correct behavior, it is
 great to step through the code with debuggers such as
-[gdb](https://www.sourceware.org/gdb/) or [lldb](https://lldb.llvm.org/).
+gdb^[https://www.sourceware.org/gdb/] or lldb^[https://lldb.llvm.org/].
 
 When developing shared objects, debugging introduces an additional layer of
 complexity. We rely upon a host that has the CLAP standard implemented and
@@ -435,7 +428,7 @@ plugin communicates the supported functionalities back to the host:
 
 The host determines the plugin's supported extensions by calling this function
 with all supported extension IDs. This ensures the host recognizes the plugin's
-capabilities. For MiniGain, the next step involves implementing the audio-ports
+capabilities. For *MiniGain*, the next step involves implementing the audio-ports
 extension as follows:
 
 ```cpp
@@ -463,7 +456,7 @@ configuration, marking a stereo channel setup. This establishes the essential
 framework for the plugin to access audio input and output streams during the
 process callback.
 
-The parameter extension in MiniGain outlines the parameters the plugin
+The *parameter extension* in MiniGain outlines the parameters the plugin
 possesses and provides metadata about them. The initialization function for the
 extension is defined as follows:
 
@@ -531,7 +524,7 @@ To make the *MiniGain* plugin fully functional, we must finally tackle the
 handling. This function is responsible for managing audio data and responding
 to events, such as parameter changes or MIDI note triggers.
 
-![CLAP parameter event](images/clap_events.png){width=66%}
+![CLAP parameter event](images/clap_events.png){width=55%}
 
 CLAP has a sophisticated method for coupling events with audio buffers. Events
 come with a header and payload; the header's `flags` denote the payload type,

@@ -9,6 +9,7 @@ The most up-to-date version can be viewed at **thesis.pdf**.
 ## Building
 
 Create a virtual environment to install the needed filter:
+
 ```bash
     python -m venv venv
     source venv/bin/activate.<your shell>

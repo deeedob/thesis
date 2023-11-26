@@ -3,18 +3,18 @@
 This section examines existing research and current advancements in the field
 of audio plugin development. Given the focused scope of this thesis, attention
 is centered on the most relevant aspects, particularly the use of inter-process
-communication in the remote control of plugins.
+communication for remote controlling plugins.
 
 ## 3.1 Clap-Plugins
 
 The project most directly related to this thesis comes from the CLAP team. In
 the official repository of the *free-audio* organization, which is the home of
-the CLAP standard, there is a project named
-[clap-plugins](https://github.com/free-audio/clap-plugins). This project serves
-as a hands-on example of how to implement a CLAP plugin. The plugins in this
-project use Qt for their GUIs. Alexandre Bique, the project's maintainer and
-the lead developer of CLAP, has recognized the challenges of integrating Qt
-GUIs with audio plugins and has offered solutions to these challenges. The first
+the CLAP standard, is the project *clap-plugins*
+^[https://github.com/free-audio/clap-plugins]. This project serves as a
+hands-on example of how to implement a CLAP. The plugins in this project
+use Qt for their GUIs. Alexandre Bique, the project's maintainer and the lead
+developer behind CLAP, has recognized the challenges of integrating Qt GUIs with
+audio plugins and has offered solutions to these challenges. The first
 suggestion is to avoid dynamically linking any dependencies to the plugin, to
 keep the plugin self-contained. Following this, the project presents two
 different strategies for integrating Qt with CLAP:
@@ -34,7 +34,7 @@ it via inter-process communication techniques.
 The initial approach of using a separate namespace for Qt still presents
 challenges, particularly on Linux systems. Even with Qt compiled under a unique
 namespace, issues arise when multiple instances of the event loop are running
-with the [glib event loop](https://docs.gtk.org/glib/main-loop.html), which is
+with the *glib event loop* ^[https://docs.gtk.org/glib/main-loop.html], which is
 the default on Linux desktops. Loading a plugin in this manner, even with a
 static Qt build under a unique namespace, into an environment where Qt is
 already running a glib event loop, might result in an error like this:
@@ -61,11 +61,10 @@ Additionally, this method necessitates manually building Qt in a separate and
 unique namespace for each plugin, adding complexity to the development process.
 
 For the *remote* strategy, the implementation utilizes a custom-built IPC
-mechanism. On POSIX systems, it employs a [unix domain
-sockets](https://de.wikipedia.org/wiki/Unix_Domain_Socket) approach, and on
-Windows, it uses [I/O completion ports](https://tinyclouds.org/iocp_links#iocp)
-(IOCP). Events initiated by the host are eventually transmitted to the GUI
-process:
+mechanism. On POSIX systems, it employs *unix domain sockets*
+^[https://de.wikipedia.org/wiki/Unix_Domain_Socket], and on Windows, it uses
+*I/O completion ports* ^[https://tinyclouds.org/iocp_links#iocp] (IOCP). Events
+initiated by the host are eventually transmitted to the GUI process:
 
 ```cpp
 // plugins/gui/remote-gui-proxy.cc
@@ -101,13 +100,6 @@ all the various events:
 ~~~
 ```
 
-In this code, *line 5* sees the incoming message extracted from the
-communication channel and stored in `rp`. If the GUI component is operational,
-it triggers the `show()` function, which in turn interfaces with the
-[QQuickView](https://doc.qt.io/qt-6/qquickview.html) of the user interface.
-This process effectively ensures the display of the GUI window in response to
-the host application's event.
-
 In this segment of code, the message is retrieved from the communication
 channel on *line 5* and copied into `rp`. If the GUI is available, the `show()`
 method is executed. This call links to the
@@ -117,23 +109,23 @@ host application.
 
 ## 3.2 Sushi
 
-Another project employing a technical specification akin to the one detailed in
-this research is [Sushi](https://github.com/elk-audio/sushi). Its description
+Another project employing a technical specification similar to the one outlined in
+this research is *Sushi* ^[https://github.com/elk-audio/sushi]. Its description
 reads:
 
 > Headless plugin host for ELK Audio OS.
 
 Elk Audio OS is a Linux-based operating system specifically developed for
 real-time audio applications. Its primary focus is on embedded hardware within
-the "Internet of Musical Things" (IoMusT) sector. This OS is available as an
+the *Internet of Musical Things* (IoMusT) domain. This OS is available as an
 open-source version for the *Raspberry Pi 4 Single Board Computer*, and it is
 also commercially offered for additional SOCs^[System-On-Chip] like the
 STM32MP1, or Intel x86
 platforms.^[https://elk-audio.github.io/elk-docs/html/documents/supported_hw.html]
 
 Sushi serves as a headless *Digital Audio Workstation* that establishes the
-fundamental communication with the Elk Audio OS. It functions as [headless
-software](https://en.wikipedia.org/wiki/Headless_software), characterized by
+fundamental communication with the Elk Audio OS. It functions as *headless
+software* ^[https://en.wikipedia.org/wiki/Headless_software], characterized by
 its design to operate without a GUI frontend - the 'missing head'.
 
 Sushi is equipped with multiple protocols and technologies for interaction and
@@ -154,15 +146,14 @@ service NotificationController
 {
     rpc SubscribeToTransportChanges (GenericVoidValue) returns (stream TransportUpdate) {}
     rpc SubscribeToParameterUpdates (ParameterNotificationBlocklist) returns (stream ParameterUpdate) {}
-    rpc SubscribeToPropertyUpdates (PropertyNotificationBlocklist) returns (stream PropertyValue) {}
     ~~~
 }
 ```
 
 Sushi provides various services to remotely manage the application or to
-monitor changes in the SUSHI application. Leveraging gRPC, this interface can
-be implemented in various languages supported by gRPC and protobuf. Elk Audio
-also offers two ready-made client implementations, one in
+monitor incoming changes from SUSHI. Leveraging gRPC, this interface can be
+implemented in various languages supported by gRPC and protobuf. Elk Audio also
+offers two ready-made client implementations, one in
 C++^[https://github.com/elk-audio/elkcpp] and another in
 Python^[https://github.com/elk-audio/elkpy].
 

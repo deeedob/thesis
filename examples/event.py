@@ -8,5 +8,5 @@ def print_section(title, content):
     print(f"{title}:\n{'-'*len(title)}\n{content}\n")
 
 print_section("Python structure", event)
-print_section("Serialized structure", event.SerializeToString())
 print_section("JSON structure", MessageToJson(event))
+print_section("Serialized structure", event.SerializeToString())

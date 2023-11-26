@@ -40,7 +40,7 @@ I also want to express special gratitude to *Alexandre Bique*. Our paths
 crossed at SUPERBOOTH23, where our conversation quickly evolved into in-depth
 discussions about plugins, GUIs, and how we imagined the future of them.
 Alexandre's work at Bitwig, particularly as the inventor and lead developer of
-the **C**Lever **A**udio **P**lugin standard, has been pivotal. He consistently
+the **CL**ever **A**udio **P**lugin standard, has been pivotal. He consistently
 provided a flow of new ideas, was receptive to mine, and provided significant
 guidance that helped shape this project. I am truly thankful for his support
 and collaboration in this journey.

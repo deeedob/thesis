@@ -1,45 +1,41 @@
 ## 2.3 The Qt Framework
 
-[Qt](https://www.qt.io/), emerging in the early 90s from Trolltech in Norway,
-stands out in the landscape of software development for its robust toolkit that
-simplifies the creation of graphical user interfaces (GUIs) that are
-platform-agnostic. With Qt, the same codebase can be deployed on multiple
-operating systems such as Linux, Windows, macOS, Android or embedded systems
-with little need for modification, streamlining the development process
-significantly.
+Qt^[https://www.qt.io/], developed in the early 90s by Trolltech in Norway, is
+a cross-platform toolkit designed for the creation of graphical user
+interfaces. It enables developers to use a single codebase for deployment on
+various operating systems, including Linux, Windows, macOS, Android, and
+embedded systems. This feature of Qt reduces the need for significant code
+modifications when targeting different platforms, thus aiding in the efficiency
+of the development process.
 
 After its acquisition by Nokia in 2008, Qt has continued to thrive under the
 guidance of The Qt Company, which is responsible for its ongoing development
-and maintenance. Qt provides two licensing options: the GNU (L)GPL license,
-promoting a community-driven approach, and a commercial license for developers
-who prefer to maintain exclusive control over their software.
+and maintenance.
 
 Qt's versatility extends beyond its C++ core, offering language bindings for
 additional programming languages, with Python being a notable example through
-[Qt for Python / PySide6](https://doc.qt.io/qtforpython-6/). This extension
-facilitates rapid development by allowing the integration of Qt's powerful C++
-modules within Python's flexible scripting environment.
+*Qt for Python / PySide6* ^[https://doc.qt.io/qtforpython-6/].
 
 ### 2.3.1 Core Techniques
 
-Central to Qt is its [Signals &
-Slots](https://doc.qt.io/qt-6/signalsandslots.html) mechanism, which can be
-thought of as a flexible implementation of the observer pattern. A 'signal'
-represents an observable event, while a 'slot' is comparable to an observer that can
-react to that event. This design allows for a many-to-many relationship meaning
-any signal may be connected to any number of slots. This concept has been
+Central to Qt is its *Signals & Slots*
+^[https://doc.qt.io/qt-6/signalsandslots.html] mechanism, which can be thought
+of as a flexible implementation of the observer pattern. A 'signal' represents
+an observable event, while a 'slot' is comparable to an observer that can react
+to that event. This design allows for a many-to-many relationship meaning any
+signal may be connected to any number of slots. This concept has been
 fundamental to Qt since its first release in 1994 and the concept of signals
-and slots is so compelling that it has become a part of the computer
-science landscape.
+and slots is so compelling that it has become a part of the computer science
+landscape.
 
-Essential for the reactive nature of graphical user interfaces, signals & slots
-enables a program to handle user-generated events such as clicks and
-selections, as well as system-generated events like incoming data
-transmissions. Qt employs the moc (Meta Object Compiler), a tool developed
-within the Qt framework, which seamlessly integrates these event notifications
+Signals & slots are crucial for the reactivity of graphical user interfaces in
+Qt. They enable program components to handle various events, ranging from user
+interactions like clicks and selections to application-generated events such as
+data transmissions. The Meta Object Compiler (moc hereon), a unique tool within
+the Qt framework, is employed to seamlessly integrate these event notifications
 into Qt's event loop.
 
-Let's examine a code example to understand the practicality and simplicity of
+The following code example illustrates the practicality and simplicity of using
 signals & slots in Qt:
 
 ```cpp
@@ -49,7 +45,6 @@ signals & slots in Qt:
 #include <QTimer>
 #include <QDebug>
 
-// To use signals and slots, we must inherit from QObject.
 class MyObject : public QObject
 {
     Q_OBJECT  // Tell MOC to target this class
@@ -71,12 +66,12 @@ private:
 };
 ```
 
-In this code snippet, we create a class integrated with Qt's [Meta-Object
-System](https://doc.qt.io/qt-6/metaobjects.html). To mesh with the Meta-Object
-System, three steps are critical:
+In this code snippet, we create a class integrated with Qt's *Meta-Object
+System* ^[https://doc.qt.io/qt-6/metaobjects.html]. To mesh with the
+Meta-Object System, three steps are critical:
 
 1. Inherit from `QObject` to gain meta-object capabilities.
-2. Use the `Q_OBJECT` macro to enable the **MOC's** code generation.
+2. Use the `Q_OBJECT` macro to enable the *moc's* code generation.
 3. Utilize the `moc` tool to generate the necessary meta-object code,
    facilitating signal and slot functionality.
 
@@ -170,6 +165,9 @@ void MyObject::dataChanged(qsizetype _t1)
 }
 ```
 
+This function takes care of marshaling the signal's arguments and then utilizes
+Qt's framework logic to dispatch the signal to all connected receivers.
+
 After running the corrected compilation and executing the application, the
 output could look like this:
 
@@ -183,50 +181,42 @@ Rejected data:  0
 
 ### 2.3.2 Graphics
 
-Within the vast expanse of the Qt universe, developers are presented with two
-primary paradigms for GUI crafting: Widgets and QML. Widgets offer the
-traditional approach in creating UI elements, making it the go-to for many
-classical desktop applications. Their imprint is evident in widely-adopted
-applications
-like
-[Telegram](https://github.com/telegramdesktop/tdesktop/blob/dev/Telegram/SourceFiles/mainwidget.cpp#L255)
-and [Google
-Earth](https://github.com/google/earthenterprise/blob/893f6b470673e2bad4cacdd8eec5ad1f179b6249/earth_enterprise/src/fusion/fusionui/main.cpp#L28).
+In Qt, developers have two main options for designing graphical user
+interfaces: Widgets and QML. Widgets represent a more traditional approach for
+constructing UI elements and are commonly used in desktop applications. This
+method is visible in popular applications such as *Telegram*
+^[https://github.com/telegramdesktop/tdesktop/blob/dev/Telegram/SourceFiles/mainwidget.cpp#L255]
+or *Google Earth*
+^[https://github.com/google/earthenterprise/blob/master/earth_enterprise/src/fusion/fusionui/main.cpp#L28].
 
-Conversely, **QML** (Qt Modeling Language) represents a contemporary,
-declarative approach to UI design. It employs a clear, JSON-like syntax, while
-utilizing inline JavaScript for imperative operations. Central to its design
-philosophy is dynamic object interconnection, leaning heavily on property
-bindings. One of its notable strengths is the seamless integration with C++,
-ensuring a clean separation between application logic and view, without any
-significant performance trade-offs.
+Conversely, *QML* represents a contemporary, declarative approach to UI design.
+It employs a clear, JSON-like syntax, while utilizing inline JavaScript for
+imperative operations. Central to its design philosophy is dynamic object
+interconnection, leaning strongly on property bindings. One of its notable
+strengths is the seamless integration with C++, ensuring a clean separation
+between application logic and view, without any significant performance
+trade-offs.
 
-Above the foundational QML module resides **QtQuick**, the de facto standard
-library for crafting QML applications. While [Qt
-QML](https://doc.qt.io/qt-6/qtqml-index.html) lays down the essential
-groundwork by offering the QML and JavaScript engines, overseeing the core
-mechanics, QtQuick comes equipped with fundamental types imperative for
-spawning user interfaces in QML. This library furnishes the visual canvas and
-encompasses a suite of types tailored for creating and animating visual
-components.
+Above the foundational QML module resides *QtQuick*, the de facto standard
+library for crafting QML applications. While *QtQML*
+^[https://doc.qt.io/qt-6/qtqml-index.html] lays down the essential groundwork
+by offering the QML and JavaScript engines, overseeing the core mechanics,
+QtQuick comes equipped with fundamental types imperative for spawning user
+interfaces in QML. This library furnishes the visual canvas and encompasses a
+suite of types tailored for creating and animating visual components.
 
 A significant distinction between Widgets and QML lies in their rendering
 approach. Widgets, relying on software rendering, primarily lean on the
 CPU for graphical undertakings. This sometimes prevents them from harnessing
 the full graphical capabilities of a device. QML, however, pivots this paradigm
 by capitalizing on the hardware GPU, ensuring a more vibrant and efficient
-rendering experience. Its declarative nature streamlines design interpretation
-and animation implementation, ultimately enhancing the development velocity.
+rendering experience.
 
 **Qt6**, the most recent major release in the Qt series, introduced a series of
-advancements. A standout among these is the QRHI (Qt Rendering Hardware
+advancements. A notable feature is the *QRHI* (Qt Rendering Hardware
 Interface). Functioning subtly in the background, QRHI adeptly handles the
 complexities associated with graphic hardware. Its primary mission is to
-guarantee determined performance consistency across a diverse range of graphic
-backends. The introduction of [QRHI](https://doc.qt.io/qt-6/qrhi.html)
-underscores Qt's steadfast dedication to strengthen its robust cross-platform
-capabilities, aiming to create a unified experience across various graphic
-backends.
+guarantee determined performance across a diverse range of graphic backends.
 
 ![Qt Rendering Hardware Interface [RHI](https://doc.qt.io/qt-6/topics-graphics.html)](images/qt_rhi.png){#fig:qrhi}
 
@@ -236,8 +226,8 @@ Positioned just above is the QWindows implementation, which is housed within
 the QtGui module of Qt. Notably, QtWidgets occupies a niche between these two
 levels. Given that Widgets emerged before the QRhi module, their integration
 with QRhi isn't as profound. While certain widgets do offer OpenGL
-capabilities, their primary reliance is on the
-[QPainter](https://doc.qt.io/qt-6/qpainter.html#drawing) API. Ascending to the
+capabilities, their primary reliance is on the *QPainter*
+^[https://doc.qt.io/qt-6/qpainter.html#drawing] API. Ascending to the
 subsequent tier, we are greeted by the Qt Rendering Hardware Interface, which
 serves as a crucial bridge, offering an abstraction layer over
 hardware-accelerated graphics APIs.
@@ -256,26 +246,22 @@ developers to tap into lower-level abstractions for crafting custom extensions
 tailored to specific project requirements—all while preserving *cross-platform
 functionality*. Beyond the foundational modules geared toward GUI development,
 Qt also offers a rich suite of additional modules. These include resources for
-localizing applications with
-[qttranslations](https://code.qt.io/cgit/qt/qttranslations.git/), handling
 audio and video via
-[qtmultimedia](https://code.qt.io/cgit/qt/qtmultimedia.git/), and various
-connectivity and networking options. Modules such as
-[qtconnectivity](https://code.qt.io/cgit/qt/qtconnectivity.git/),
-[qtwebsockets](https://code.qt.io/cgit/qt/qtwebsockets.git/), and the latest
+[qtmultimedia](https://code.qt.io/cgit/qt/qtmultimedia.git/), nework related
+modules such as
+[qtconnectivity](https://code.qt.io/cgit/qt/qtconnectivity.git/) or the latest
 addition, [qtgrpc](https://code.qt.io/cgit/qt/qtgrpc.git/), facilitate the
 integration of Qt into an even wider range of systems.
 
 ### 2.3.3 QtGrpc and QtProtobuf
 
-The [QtGrpc](https://doc.qt.io/qt-6/qtgrpc-index.html) module, which is in a
-technical preview stage as of Qt version 6.6, represents an innovative addition
-to Qt's suite. It provides plugins for the `protoc` compiler, which we touched
-upon in section **3.2**. These plugins are designed to serialize and
-deserialize Protobuf messages into Qt-friendly classes, facilitating a smooth
-and integrated experience within the Qt framework. This integration
-significantly reduces the need for additional boilerplate code when working
-with Protobuf and gRPC.
+The *QtGrpc* module, available for technical preview as of Qt version 6.6, is a
+recent addition to the Qt suite. Detailed in its *documentation*
+^[https://doc.qt.io/qt-6/qtgrpc-index.html], this module includes plugins for
+the `protoc` compiler. These plugins are designed to serialize and deserialize
+Protobuf messages into classes that are compatible with Qt, aiming to simplify
+the use of Protobuf and gRPC within the Qt framework by minimizing the need for
+additional boilerplate code.
 
 To enhance our previous `event.proto` definition with Qt features, let's
 compile it using the qtprotobufgen plugin as follows:
@@ -298,14 +284,9 @@ class Event : public QProtobufMessage
     Q_PROTOBUF_OBJECT
     Q_DECLARE_PROTOBUF_SERIALIZERS(Event)
     Q_PROPERTY(example::TypeGadget::Type id_proto READ id_proto WRITE setId_proto SCRIPTABLE true)
-    Q_PROPERTY(QString name READ name WRITE setName SCRIPTABLE true)
-    Q_PROPERTY(QString description READ description_p WRITE setDescription_p)
-    Q_PROPERTY(bool hasDescription READ hasDescription)
-
+~~~
 public:
-    using QtProtobufFieldEnum = Event_QtProtobufNested::QtProtobufFieldEnum;
     Event();
-    ~Event();
 ~~~
 ```
 
@@ -314,15 +295,15 @@ In the provided C++ header file, the `Event` class inherits from
 serialization and deserialization of Protocol Buffers. This class definition
 enables the automatic conversion of data types defined in .proto files to
 Qt-friendly types. Such integration allows developers to use these types with
-ease within both the Qt C++ environment and QML, facilitating rapid and
-adaptable integration with gRPC services, irrespective of the server's
-implementation language.
+ease within both Qt's C++ and QML environment, facilitating the adaptable
+integration with gRPC services, irrespective of the server's implementation
+language.
 
 Furthermore, QtGrpc extends the functionality of Protocol Buffers within the Qt
 framework by providing essential classes and tools for gRPC communication. For
 example, `QGrpcHttp2Channel` offers an *HTTP/2* channel implementation for server
 communication, while `QGrpcCallReply` integrates incoming messages into the Qt
 event system. This synergy between QtGrpc and protocol buffers streamlines
-client-server interactions by embedding Protocol Buffer serialization within
+client-server interactions by embedding protocol buffer serialization within
 Qt's event-driven architecture.
 
