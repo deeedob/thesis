@@ -1,6 +1,6 @@
 # Remote Audio Plugin Development
 
-## Integrating CLAP and Qt for Enhanced Development Solutions
+## Integrating Qt and CLAP for Enhanced Development Solutions
 
 author: Dennis Oberst
 

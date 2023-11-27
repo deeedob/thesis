@@ -1,7 +1,7 @@
 pdf-engine: xelatex
 from: markdown+fancy_lists+implicit_figures+emoji+auto_identifiers
 to: pdf
-output-file: thesis.pdf
+output-file: remote_audio_plugin_development_uni.pdf
 
 filters:
   - pandoc-crossref

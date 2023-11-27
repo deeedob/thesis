@@ -492,19 +492,19 @@ $else$
     {\large $subtitle$ \par}
     \vspace{2.5cm}
     {\Large \textbf{A thesis submitted to attain the degree of}\par}
-    {\Large \textbf{BACHELOR OF SCIENCE (B. Sc.)}\par}
+    {\Large \textbf{\textit{BACHELOR OF SCIENCE (B. Sc.)}}\par}
     \vspace{0.1cm}
     {\large \textit{at the}\par}
     \vspace{0.1cm}
-    {\Large \textbf {$university$} \par}
+    {\Large \textbf{\textit{$university$}} \par}
     {\large \textit{Media Technology program at the Faculty of Information, Media, and Electrical Engineering}\par}
     \vspace{2.5cm}
     \end{center}
-    {\Large \textbf{Author:} $author$ \par}
+    {\Large \textbf{\textit{Author:}} $author$ \par}
     \vspace{0.1cm}
-    {\Large \textbf{Submitted to:} $first-examiner$ \par}
+    {\Large \textbf{\textit{First Examiner:}} $first-examiner$ \par}
     \vspace{0.1cm}
-    {\Large \textbf{Second Examiner:} $second-examiner$ \par}
+    {\Large \textbf{\textit{Second Examiner:}} $second-examiner$ \par}
     \vspace{2.5cm}
     \vspace{0.1cm}
     \vspace*{\fill}
@@ -547,7 +547,9 @@ $if(colorlinks)$
 \hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
 $endif$
 \setcounter{tocdepth}{$toc-depth$}
+\newgeometry{inner=30mm, outer=30mm, top=23mm, bottom=23mm}
 \tableofcontents
+\restoregeometry
 }
 $endif$
 $endif$

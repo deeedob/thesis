@@ -10,7 +10,7 @@ notable for its speed and its support for multiple programming languages,
 making it a practical choice for facilitating communication between different
 software components in modern software architectures.
 
-![gRPC supported languages](images/grpc_langs.png){ width=66% }
+![gRPC supported languages](images/grpc_langs.png){ width=88% }
 
 ### 2.3.1 Protobuf
 

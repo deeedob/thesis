@@ -101,7 +101,7 @@ static QCoreApplication *instance() noexcept { return self; }
 
 This design choice means only one `QApplication` can exist within a process.
 Issues arise when a plugin-loading-host, as
-QTractor^[https://github.com/rncbc/qtractor/blob/0e987e6c41796a4cbe85e499ae890b5989be8b82/src/qtractor.h#L60],
+QTractor^[https://github.com/rncbc/qtractor/blob/master/src/qtractor.h#L60],
 already utilizes a `QApplication` object or when multiple plugin instances
 operate within a single process. At first glance, one might assume the ability
 to verify the presence of a `QApplication` within the process and then allowing

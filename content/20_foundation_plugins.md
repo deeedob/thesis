@@ -290,12 +290,12 @@ Over time, various audio plugin standards have evolved, but only a select few
 remain significant today. The table below provides an overview of some of the
 most well-recognized standards:
 
-|                                      Standard                                       |       Extended Name       |     Developer     |  File Extension   |      Supported OS      |  Initial Release  |           Licensing           |
-|                                   --------------                                    |    -------------------    |    -----------    | ----------------  |    ---------------     | ----------------- |        ---------------        |
-|                          [CLAP](https://cleveraudio.org/)                           |    Clever Audio Plugin    |   Bitwig & U-he   |       .clap       | Windows, MacOS & Linux |       2022        |              MIT              |
-|    [VST/VST3](https://steinbergmedia.github.io/vst3_dev_portal/pages/index.html)    | Virtual Studio Technology |     Steinberg     | .dll, .vst, .vst3 | Windows, MacOS & Linux |       2017        | GPLv3, Steinberg Dual License |
-|                      [AAX](https://apps.avid.com/aax-portal/)                       |   Avid Audio Extension    | Pro Tools (Avid)  |       .aax        |    Windows & MacOS     |       2011        |       Approved Partner        |
-| [AU](https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins) |        Audio Units        | Apple macOS & iOS |        .AU        |         MacOS          |  "Cheetah" 2001   |   Custom License Agreement    |
+|                                      Standard                                       |       Extended Name       |       Developer       |  File Extension   |      Supported OS      |  Initial Release  |           Licensing           |
+|                                   --------------                                    |    -------------------    |      -----------      | ----------------  |    ---------------     | ----------------- |        ---------------        |
+|                          [CLAP](https://cleveraudio.org/)                           |    Clever Audio Plugin    |     Bitwig & U-he     |       .clap       | Windows, MacOS & Linux |       2022        |              MIT              |
+|    [VST/VST3](https://steinbergmedia.github.io/vst3_dev_portal/pages/index.html)    | Virtual Studio Technology |       Steinberg       | .dll, .vst, .vst3 | Windows, MacOS & Linux |       2017        | GPLv3, Steinberg Dual License |
+|                      [AAX](https://apps.avid.com/aax-portal/)                       |   Avid Audio Extension    |   Pro Tools (Avid)    |       .aax        |    Windows & MacOS     |       2011        |       Approved Partner        |
+| [AU](https://developer.apple.com/documentation/audiotoolbox/audio_unit_v3_plug-ins) |        Audio Units        |   Apple macOS & iOS   |        .AU        |         MacOS          |  "Cheetah" 2001   |   Custom License Agreement    |
 
 Certain standards cater specifically to particular platforms or programs. For
 instance, *Apple's AU* is seamlessly integrated with their core audio
