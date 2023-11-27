@@ -2,19 +2,15 @@
 lang: en-US
 keyword: [CLAP, Qt, gRPC, Headless, Audio Plugins, Remote GUI]
 
-university: Cologne University of Applied Science
-department: Department of Media Technology
-
-type: Bachelor Thesis
-author: Dennis Oberst
-
 title: Remote Audio-Plugin Development
 subtitle: Integrating Qt and CLAP for Enhanced Development Solutions
+author: Dennis Oberst
 
+university: Cologne University of Applied Sciences
 first-examiner: Prof. Dr. Arnulph Fuhrmann
-second-examiner: Dr.
+second-examiner: Dr. Cristián Maureira-Fredes
 
-date: 04 December 2023
+date: Berlin, 04 December 2023
 
 csl: resources/springer.csl
 bibliography: content/bibliography.bib

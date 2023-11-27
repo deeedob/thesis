@@ -5,7 +5,7 @@ help:
 	head -2 Makefile
 
 thesis-pdf:
-	pandoc --defaults=project.yaml --highlight-style tango
+	pandoc --template project.latex --defaults=project.yaml --highlight-style tango
 
 detect-images:
 	grep -ohr "images/.*" content/

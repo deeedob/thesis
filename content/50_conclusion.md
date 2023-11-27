@@ -7,15 +7,15 @@ system. A series of tests were conducted to simulate a high volume of events
 and measure the system's efficiency in processing and delivering these events
 to the client. The key steps in the benchmarking process were:
 
-1. **Client Initialization**: The client, running as a separate process,
+1. *Client Initialization*: The client, running as a separate process,
    connects and initiates event polling, marking the event system as
    operational.
-2. **Event Generation and Dispatch**: Events are generated and enqueued in the
+2. *Event Generation and Dispatch*: Events are generated and enqueued in the
    `pluginToClientsQueue`. These steps involve:
     - Wrapping events in a specific type for processing.
     - The polling callback aggregates these events into a gRPC streaming message.
     - The message is serialized and transmitted via the HTTP/2 channel.
-3. **Event Reception and Processing**: The client receives the serialized
+3. *Event Reception and Processing*: The client receives the serialized
    messages, converts them back into gRPC format, and performs trivial
    computations with the data.
 
@@ -130,9 +130,8 @@ several metrics:
 ~~~
 ```
 
-The benchmark test can be configured to run with varying values for
-`iterations` and `eventsPerIteration`, evaluating the performace
-under various load conditions.
+The benchmark can be configured to run with varying values for `iterations` and
+`eventsPerIteration`, evaluating the performace under various load conditions.
 
 In the benchmark results for the CLAP-RCI event system, two charts display the
 performance under different loads. Each benchmark invocation ran 1,000
@@ -167,21 +166,21 @@ complexity of the already streamlined CLAP interface and provides a robust
 default for users, allowing them to customize their interaction with the events
 they need to handle.
 
-The decision to separate the problematic (Qt) component from the rest of the
-system has proved its worth, enabling the server implementation to leverage the
+The decision to separate the problematic component from the rest of the system
+has proved its worth, enabling the server implementation to leverage the
 language-agnostic capabilities provided by gRPC and protobuf. This separation
 of the GUI, or more accurately the clients, introduces a novel way to interact
-with audio plugins, where visualization responsibilities are entirely deferred
-to the client, freeing the server from these duties. Although currently
-limited, future development could enable multiple clients to connect to the
-same plugin simultaneously. This would allow for remote control of the plugin
-from various devices such as smartphones, tablets, and computers, expanding the
-range of interactive possibilities.
+with audio plugins on desktop platforms, where responsibilities are entirely
+deferred to the client, freeing the server from these duties. Although
+currently limited, future development could enable multiple clients to connect
+to the same plugin simultaneously. This would allow for remote control of the
+plugin from various devices such as smartphones or tablets, expanding the range
+of interactive possibilities.
 
 However, it's important to acknowledge that these libraries are still evolving
 and are not yet at an optimal stage of development. The API requires further
 refinement to offer a consistent and stable user experience, not even touching
-aspects like binary compatibility. Additionally, several features are yet to be
+upon binary compatibility. Additionally, several features are yet to be
 implemented. Despite these areas for improvement, this research has validated
 the effectiveness of the methods presented, laying a solid foundation for
 future enhancements and investigations in this field.

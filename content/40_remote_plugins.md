@@ -13,12 +13,12 @@ critical requirement.
 
 *@fig:plug_tradition* outlines the conventional architecture of audio plugins
 when integrated with graphical user interfaces. In this context, multiple
-instances are generated from our Dynamic Shared Object (DSO), hence enforcing
-reentrancy. The traditional approach involves initiating the user interface's
-event loop within a distinct thread, typically resulting in at least two
-threads operating within the DSO's process. This method is evident in
-JUCE^[https://juce.com/], a renowned library for creating agnostic plugins,
-and is also employed in various open-source projects.
+instances are generated from our DSO, hence enforcing reentrancy. The
+traditional approach involves initiating the user interface's event loop within
+a distinct thread, typically resulting in at least two threads operating within
+the DSO's process. This method is evident in JUCE^[https://juce.com/], a
+renowned library for creating agnostic plugins, and is also employed in various
+open-source projects.
 
 Starting Qt's event loop within a dedicated thread presents significant
 challenges. To address these, we opted to run the plugin's GUI in
@@ -42,14 +42,13 @@ experience.
 Consider a scenario where both the GUI and the real-time thread coexist within
 the same process. In such a case, a crash in the GUI could lead to the failure
 of the real-time thread. However, if the GUI operates as a separate process and
-encounters a crash, the real-time thread remains unaffected. Implementing
-Inter-Process Communication (IPC) or Remote Procedure Call (RPC) techniques,
-while more complex, does not significantly impact user experience. This is
-because the data exchanged between the processing and GUI unit, such as
-parameter adjustments or note events, is minimal, often just a few bytes. For
-sharing larger sets of data like audio, strategies like using shared memory
-pools can be effective, ensuring speed comparable to direct thread
-communication. However, this approach does introduce complexity in
+encounters a crash, the real-time thread remains unaffected. Implementing IPC
+or RPC techniques, while more complex, does not significantly impact user
+experience. This is because the data exchanged between the processing and GUI
+unit, such as parameter adjustments or note events, is minimal, often just a
+few bytes. For sharing larger sets of data like audio, strategies like using
+shared memory pools can be effective, ensuring speed comparable to direct
+thread communication. However, this approach does introduce complexity in
 implementation. It is also worth noting that the operational speed of GUIs does
 not need to match that of real-time threads.
 
@@ -79,17 +78,19 @@ techniques:
 5. Optionally, enable the client to request specific functionalities from the
    host.
 
-Utilizing these methods in conjunction with QtGrpc^[FIXME: Missing reference] has proven successful,
+Utilizing these methods in conjunction with
+QtGrpc^[https://doc.qt.io/qt-6/qtgrpc-index.html] has proven successful,
 delivering a reliable, fast, and native experience on desktop platforms.
 
 ## 4.2 Remote Control Interface
 
 In this section, we explore the development of the Remote Control Interface
-(RCI) for CLAP. This interface is designed as a thin overlay on top of the CLAP
-API, providing a streamlined plugin layer abstraction. Its primary function is
-to abstract the interface in a manner that ensures communication is not only
-automatically configured but also consistently delivered. Users of this library
-are encouraged to engage with the features they wish to tailor to their needs.
+(RCI hereon) for CLAP. This interface is designed as a thin overlay on top of
+the CLAP API, providing a streamlined plugin layer abstraction. Its primary
+function is to abstract the interface in a manner that ensures communication is
+not only automatically configured but also consistently delivered. Users of
+this library are encouraged to engage with the features they wish to tailor to
+their needs.
 
 > Note: The techniques and code examples presented in the subsequent sections
 > represent the current stage of development and may not reflect the most
@@ -123,22 +124,23 @@ leverages the language-independent features of protobuf's IDL, allowing clients
 the freedom to implement the server-provided API in any desired manner. The
 server's primary role is to efficiently manage event traffic to and from its
 clients. This opens up possibilities such as controlling plugins through
-the Command Line Interface (CLI) or embedded devices, as long as they support gRPC and
-have a client implementation for the API. Additionally, we can statically link
-all dependencies against our library target, enhancing portability. This aspect
-of portability is vital, particularly in the realm of plugins, which often
-require extra attention and care.
+embedded devices or having multiple clients connect to the same plugin, as long
+as they support gRPC and have a client implementation for the API.
+Additionally, we can statically link all dependencies against our library
+target, enhancing portability. This aspect of portability is vital,
+particularly in the domain of plugins, which often require extra attention and
+care.
 
-![CLAP-RCI Architecture](images/clap-rci_arch.png){ #fig:claprciarch }
+![CLAP-RCI Architecture](images/clap-rci_arch.png){ #fig:claprciarch width=77% }
 
-*@fig:claprciarch*, represents the architecture of the developed
-server library. At the foundational level, there is a host that is compatible
-with the CLAP interface. Positioned just above is the CLAP API, which the
-host employs to manage its plugins. The client also interacts with this API, but
-with the addition of the CLAP-RCI wrapper library, which seamlessly integrates
-all necessary communication mechanisms. Above this layer is the client
-implementation of CLAP-RCI. The communication between these two layers is
-facilitated through the HTTP/2 protocol of gRPC. This structure enables the
+*@fig:claprciarch*, represents the architecture of the developed server
+library. At the foundational level, there is a host that is compatible with the
+CLAP interface. Positioned just above is the CLAP API, which the host employs
+to manage its plugins. The client also interacts with this API, but with the
+addition of the CLAP-RCI wrapper library in-between, which seamlessly
+integrates all necessary communication mechanisms. Above this layer is the
+client implementation of CLAP-RCI. The communication between these two layers
+is facilitated through the HTTP/2 protocol of gRPC. This structure enables the
 client implementation to support a diverse range of languages while providing
 independent and robust interference with the plugin's backend.
 
@@ -168,7 +170,7 @@ The gRPC C++ library offers three distinct approaches for server creation:
    implementation, with the client call waiting for the server's response.
 2. **Callback API**: This serves as an abstraction over the asynchronous API,
    offering a more accessible solution to its complexities. This approach was
-   introduced in the proposal L67-cpppcallback-api^[https://github.com/grpc/proposal/blob/master/L67-cpp-callback-api.md].
+   introduced in the proposal *L67-cpppcallback-api*^[https://github.com/grpc/proposal/blob/master/L67-cpp-callback-api.md].
 3. **Asynchronous API**: The most complex yet highly flexible method for
    creating and managing RPC calls. It allows complete control over the
    threading model but at the cost of a more intricate implementation. For
@@ -205,7 +207,7 @@ MurmurHash^[https://en.wikipedia.org/wiki/MurmurHash]. This step is crucial
 for ensuring that each GUI connecting to the server can be correctly mapped to
 its corresponding plugin instance. The generated hash value is used both as a
 command line argument when launching the GUI and as the key for inserting the
-plugin into a map.The following C++ code snippet demonstrates the
+plugin into a map. The following C++ code snippet demonstrates the
 implementation of MurmurHash3:
 
 ```cpp
@@ -217,7 +219,7 @@ implementation of MurmurHash3:
 // a subset of the bits while reducing collisions significantly.
 [[maybe_unused]] inline std::uint64_t toHash(void *ptr)
 {
-    uint64_t h = reinterpret_cast<uint64_t>(ptr); // NOLINT
+    uint64_t h = reinterpret_cast<uint64_t>(ptr);
     h ^= h >> 33;
     h *= 0xff51afd7ed558ccd;
     h ^= h >> 33;
@@ -259,20 +261,16 @@ public:
 }
 ```
 
-In the upcoming code snippet, we explore the constructor of the
-`CorePlugin` class. This constructor is fundamental, establishing the essential
-framework upon which the class operates. As a cornerstone of our architecture,
-the *CorePlugin* class stands at the forefront, acting as the primary interface
-for client interactions with this library:
+As a cornerstone of our architecture, the *CorePlugin* class stands at the
+forefront, acting as the primary interface for client interactions with this
+library:
 
 ```cpp
 // plugin/coreplugin.cpp
 // CorePlugin::CorePlugin(~) {
 ~~~
     auto hc = ServerCtrl::instance().addPlugin(this);
-    assert(hc);
     dPtr->hashCore = *hc;
-    logInfo();
     // The shared data is used as a pipeline for this plugin instance
     // to communicate with the server and its clients
     dPtr->sharedData = ServerCtrl::instance().getSharedData(dPtr->hashCore);
@@ -340,16 +338,14 @@ creation process.
 The completion queues, as previously noted, function as FIFO (First-In,
 First-Out) structures, utilizing a tag system to identify the nature of the
 events being processed. Tags, representing specific instructions, are enqueued
-and later retrieved when the gRPC framework is ready to handle them.
-
-The following C++ code snippet provides a glimpse into this mechanism:
+and later retrieved when the gRPC framework is ready to handle them. The
+following snippet provides a glimpse into this mechanism:
 
 ```cpp
 // server/cqeventhandler.cpp
 void CqEventHandler::run()
 {
     state = RUNNING;
-
     void *rawTag = nullptr;
     bool ok = false;
     // Repeatedly block until the next event is ready in the completion queue.
@@ -389,7 +385,7 @@ void ServerEventStream::process(bool ok)
                     "Couldn't authenticate client" }, toTag(this));
                 return;
             }
-            sharedData->tryStartPolling()) { // FIXME: this line looksbroken
+            if (!sharedData->tryStartPolling()) {
                 SPDLOG_INFO("Already polling events!");
             }
             state = WRITE;
@@ -454,30 +450,6 @@ about synchronization and threading are softened. Plugins are registered with
 the server, obtaining a handle to the `SharedData` object. Events are then
 pushed into FIFO queues within SharedData, and the server automatically manages
 everything thereafter.
-
-> FIXME: These three paragraph seems to related/repeated
-
-To enable this, it's necessary to implement an event polling mechanism. The
-decision for this work was not to introduce a separate thread for this task, aiming to avoid the
-complexities of thread switching and synchronization issues. Instead, the
-existing completion queues were repurposed.
-These queues are already operational
-and maintain internal thread pools, additionally offering capabilities for
-client channel communication. Our task involves enqueuing custom operations
-into the completion queue, which then manages their lifecycle and scheduling.
-Fortuitously, the gRPC library provides a suitable, albeit lesser-known,
-feature for this purpose: the `Alarm` class.
-
-Implementing the event polling mechanism is crucial for this system to function
-effectively. To avoid creating another independent thread for this purpose, and
-to sidestep the complexities associated with thread switching and
-synchronization, the existing completion queues were utilized. These
-queues are already active and managed by internal thread pools. Importantly,
-they have the capability to interact with client channels. The strategy
-involves enqueuing custom operations into the completion queue, which then
-oversees their lifecycle and schedules subsequent invocations. Fortuitously,
-the gRPC library offers a particularly useful, though less commonly known, tool
-for this purpose: the `Alarm` class.
 
 Implementing the event polling mechanism is crucial for this system to function
 effectively. To avoid creating another independent thread for this purpose, and
@@ -582,7 +554,7 @@ bool CqEventHandler::enqueueFn(EventTag::FnType &&f, std::uint64_t deferNs /*= 0
         eventFn.first->second.Set(
             cq.get(), gpr_now(gpr_clock_type::GPR_CLOCK_REALTIME), toTag(eventFn.first->first.get())
         );
-    } else { // Defer the function.
+    } else { // Defer the function call.
         const auto tp = gpr_time_from_nanos(deferNs, GPR_TIMESPAN);
         eventFn.first->second.Set(cq.get(), tp, toTag(eventFn.first->first.get()));
     }
@@ -672,7 +644,7 @@ callback with a progressively increasing exponential backoff. This technique is
 employed to minimize the server's CPU consumption during its hiatus in event
 activity, thereby enhancing overall efficiency.
 
-![Exponential Backoff](images/clap-rci_exp_backoff.png){#fig:expbackoff}
+![Exponential Backoff](images/clap-rci_exp_backoff.png){#fig:expbackoff width=66% }
 
 *@fig:expbackoff* illustrates the exponential backoff curve employed to
 determine the interval before the next event check. The curve is segmented into
@@ -697,7 +669,7 @@ system, triggering frequent events that require quick server responses. Once
 user interaction drops off and plugins are not in use, the system seamlessly
 shifts into **stand-by** mode to optimize efficiency.
 
-![Exponential Backoff Server Trace](images/clap-rci_exp_backoff_trace.png){#fig:expbackofftrace}
+![Exponential Backoff Server Trace](images/clap-rci_exp_backoff_trace.png){#fig:expbackofftrace width=88% }
 
 *@fig:expbackofftrace* captures this dynamic behavior. An additional trace
 message in the code helps accentuate the exponential backoff's response to
@@ -889,7 +861,7 @@ in the snippet below:
 ~~~
 ```
 
-As mentioned earlier in the [server implementation](#server_implementation)
+As mentioned earlier in the [server implementation](#server-implementation)
 section, a hashing algorithm is utilized to identify each plugin instance. This
 hash is provided as an argument to the executable, and it is essential that
 the client handles this hash and includes it when initiating communication.

@@ -33,9 +33,6 @@ $if(background-image)$
 \usebackgroundtemplate{%
   \includegraphics[width=\paperwidth]{$background-image$}%
 }
-
-\usepackage{geometry} % Add the geometry package
-\usepackage{sectsty}
 % In beamer background-image does not work well when other images are used, so this is the workaround
 \pgfdeclareimage[width=\paperwidth,height=\paperheight]{background}{$background-image$}
 \usebackgroundtemplate{\pgfuseimage{background}}
@@ -488,47 +485,44 @@ $if(title)$
 $if(beamer)$
 \frame{\titlepage}
 $else$
-
-% Custom Title Page
 \begin{titlepage}
-    \centering
     \vspace*{\fill}
-
-    % Your custom title, subtitle, and author information
-    {\LARGE \textbf{$title$} \par}
-    \vspace{0.5cm}
+    \begin{center}
+    {\Huge \textbf{$title$} \par}
     {\large $subtitle$ \par}
     \vspace{2.5cm}
     {\Large \textbf{A thesis submitted to attain the degree of}\par}
-    {\Large \textbf{BACHELOR OF SCIENCES (B. Sc.)}\par}
-    \vspace{0.5cm}
+    {\Large \textbf{BACHELOR OF SCIENCE (B. Sc.)}\par}
+    \vspace{0.1cm}
+    {\large \textit{at the}\par}
+    \vspace{0.1cm}
+    {\Large \textbf {$university$} \par}
+    {\large \textit{Media Technology program at the Faculty of Information, Media, and Electrical Engineering}\par}
+    \vspace{2.5cm}
+    \end{center}
     {\Large \textbf{Author:} $author$ \par}
-    \vspace{0.5cm}
-    {\Large \textbf{University:} $university$ \par}
-    \vspace{0.5cm}
-    {\Large \textbf{Department:} $department$ \par}
-    \vspace{0.5cm}
-    {\Large \textbf{First Examiner:} $first-examiner$ \par}
-    \vspace{0.5cm}
+    \vspace{0.1cm}
+    {\Large \textbf{Submitted to:} $first-examiner$ \par}
+    \vspace{0.1cm}
     {\Large \textbf{Second Examiner:} $second-examiner$ \par}
-    \vspace{1.5cm}
-    {\Large \textbf{Date:} $date$ \par}
-
+    \vspace{2.5cm}
+    \vspace{0.1cm}
     \vspace*{\fill}
+    \begin{center}
+    {\Large $date$ \par}
+    \end{center}
 \end{titlepage}
-
-
 $endif$
-
 $if(abstract)$
-\newgeometry{inner=45mm, outer=45mm, top=45mm, bottom=45mm} % Adjust width and height as needed
-\sectionfont{\large}  % Set section (abstract) font size to "large"
-\begin{abstract}
+\newgeometry{inner=30mm, outer=30mm, top=30mm, bottom=30mm}
+\begin{singlespace}
+\vspace*{\fill}
+\textbf{Abstract}\par
+\vspace{0.5cm}
 $abstract$
-\end{abstract}
-% Restore the original page dimensions after the abstract page
+\vspace*{\fill}
+\end{singlespace}
 \restoregeometry
-
 $endif$
 $endif$
 

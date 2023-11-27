@@ -29,10 +29,10 @@ variables:
   geometry:
     - a4paper
     - bindingoffset=0mm
-    - inner=22mm
-    - outer=22mm
-    - top=22mm
-    - bottom=22mm
+    - inner=24mm
+    - outer=24mm
+    - top=24mm
+    - bottom=24mm
   linestretch: 1.25
   color-links: true
   link-citations: true

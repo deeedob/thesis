@@ -75,7 +75,7 @@ array of programming languages, but they can also craft their own plugins. An
 example is seen in QtGrpc, where a custom plugin will translate the proto file
 to C++ classes, which seamlessly integrate into Qt's ecosystem.
 
-![protoc extensions](images/protobuf_protoc.png){ width=77% }
+![protoc extensions](images/protobuf_protoc.png){ #fig:protocplugs width=77% }
 
 For instance, to compile the protobuf file into a Python interface, use:
 
