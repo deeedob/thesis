@@ -1,0 +1,3 @@
+[submodule "examples/mini_clap/clap"]
+	path = examples/mini_clap/clap
+	url = https://github.com/free-audio/clap

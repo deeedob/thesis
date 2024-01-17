@@ -1,12 +1,11 @@
 pdf-engine: xelatex
 from: markdown+fancy_lists+implicit_figures+emoji+auto_identifiers
 to: pdf
-output-file: remote_audio_plugin_development_uni.pdf
+output-file: remote_audio_plugin_development.pdf
 
 filters:
   - pandoc-crossref
   - pandoc-include
-  - mermaid-filter
   - citeproc
 
 input-files:
@@ -25,14 +24,15 @@ input-files:
 
 variables:
   book: true
-  papersize: a4
+  papersize: a5
+  fontsize: 12pt
   geometry:
     - a4paper
     - bindingoffset=0mm
-    - inner=24mm
-    - outer=24mm
-    - top=24mm
-    - bottom=24mm
+    - inner=30mm
+    - outer=30mm
+    - top=30mm
+    - bottom=30mm
   linestretch: 1.25
   color-links: true
   link-citations: true
@@ -54,7 +54,6 @@ variables:
   figureTitle: Figure
   figPrefix: Figure
   graphics: yes
-  fontsize: 12
   listings-no-page-break: true
   mainfont: Literata
   mainfontoptions:

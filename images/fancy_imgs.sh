@@ -1,23 +1,8 @@
 #!/bin/bash
 
 images_dir=$(pwd)
-backup_base_dir="$images_dir/bkp"
 clean_dir="$images_dir/clean"
 this="fancy_imgs.sh"
-
-find_backup_dir() {
-    local dir=$1
-    local count=1
-    while [[ -d $dir ]]; do
-        dir="${1}${count}"
-        ((count++))
-    done
-    echo $dir
-}
-
-backup_dir=$(find_backup_dir $backup_base_dir)
-mkdir -p "$backup_dir"
-mv ./*.png "$backup_dir/";
 
 for img in "$clean_dir"/*.png; do
     filename=$(basename "$img")
