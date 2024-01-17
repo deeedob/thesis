@@ -1,10 +1,16 @@
+<div align="center">
+
 # Remote Audio Plugin Development
 
 ## Integrating Qt and CLAP for Enhanced Development Solutions
 
-> My thesis submitted to attain the degree of
->       *BACHELORS OF SCIENCE ( B.Sc. )*
-> author: Dennis Oberst
+
+
+> **My thesis submitted to attain the degree of**  
+> *BACHELORS OF SCIENCE ( B.Sc. )*  
+> *author: Dennis Oberst*
+
+</div>
 
 This repository contains the latest version of my thesis, all the tools and
 images, fonts, reviews, examples and somwhat tracked this period of my life.
@@ -18,7 +24,7 @@ in the thesis. `git submodule update --init` and have a look
 
 ## Building
 
-1. [Fancify images](imgages/fancy_imgs.sh)
+1. [Fancify images](images/fancy_imgs.sh)
 2. Depends on `pandoc, pandoc-crossref, xelatex`
 3. Install additional filters into python venv:
     ```bash
@@ -29,5 +35,5 @@ in the thesis. `git submodule update --init` and have a look
     ```
 3. Build:
     ```bash
-        make thesis-pdf
+        make thesis
     ```
