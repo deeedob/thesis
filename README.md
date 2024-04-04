@@ -32,7 +32,7 @@ proof-of-concept implementations:
     [QtGrpc](https://doc.qt.io/qt-6/qtgrpc-index.html) module and serves
     as the client implementation for *clap-rci*.
 
-📌 [QtClapInterface(TBA)]()
+📌 [qtcleveraudioplugin](https://code.qt.io/cgit/playground/qtcleveraudioplugin.git/about/)
 
 ## MiniClap
 
